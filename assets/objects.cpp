@@ -1,5 +1,8 @@
 #include <string>
 
+
+
+// classes
 class Person{
     private:
 	int ID;
@@ -38,6 +41,38 @@ class Patient : public Person {
 class Doctor : public Person {
     // TODO
 };
+
+
+// structs
+struct Appointment{
+    private:
+	int appID;
+	int patID;
+	int docID;
+	std::string appSched;
+	int hour;
+	bool isCancelled = false;
+    public:
+	Appointment(int givenAppID, int givenPatID, int givenDocID, std::string givenAppSched, int givenHour){
+	    appID = givenAppID;
+	    patID = givenPatID;
+	    docID = givenDocID;
+	    appSched = givenAppSched;
+	    hour = givenHour;
+	}
+
+	void cancelAppointment(){
+	    isCancelled = true;
+	    return;
+	}
+
+	void printAppointment(){
+	    return;
+	}
+};
+
+
+
 
 class HospitalManager{
     // TODO

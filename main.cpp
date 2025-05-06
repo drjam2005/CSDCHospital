@@ -1,4 +1,5 @@
 #include <iostream>
+#include <objects.cpp>
 
 class MainWindow {
     // TODO
