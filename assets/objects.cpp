@@ -1,7 +1,6 @@
 #include <string>
 #include <vector>
 
-
 // classes
 class Person{
     private:
@@ -45,10 +44,10 @@ class Doctor : public Person {
         	std::vector<std::string> availableTimes;
 	public:
 	// constructor
-		Doctor(int givenID, std::string givenName, int givenAge, char givenSex, std:string givenSpecialization) : Person(int givenID, std::string givenName, int givenAge, char givenSex)
-			{
-				specialization = givenSpecialization;
-			}
+		Doctor(int givenID, std::string givenName, int givenAge, char givenSex, std::string givenSpecialization) : Person(givenID, givenName, givenAge, givenSex)
+	{
+	    specialization = givenSpecialization;
+	}
 	// setters...
 };
 
@@ -85,6 +84,14 @@ struct Appointment{
 
 
 class HospitalManager{
-    // TODO
+    private:
+	std::vector<Patient> patients;
+	std::vector<Doctor> doctors;
+	std::string patientSaveName;
+	std::string doctorSaveName;
+    public:
+	HospitalManager(std::string givenPatientSaveName, std::string givenDoctorSaveName) : patientSaveName(givenPatientSaveName), doctorSaveName(givenDoctorSaveName) {}
+
+
 };
 
