@@ -13,14 +13,14 @@
 ##
 
 ### Person
-- [ ] Attributes
-    - [ ] ID Number
-    - [ ] Name
-    - [ ] Age
-    - [ ] Gender
-- [ ] Methods
-    - [ ] Constructor
-    - [ ] Getter and Setter Methods
+- [x] Attributes
+    - [x] ID Number
+    - [x] Name
+    - [x] Age
+    - [x] Gender
+- [x] Methods
+    - [x] Constructor
+    - [x] Getter and Setter Methods
 
 ### Patient (Inherits from Person)
 - [ ] Attributes
