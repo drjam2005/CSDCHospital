@@ -40,6 +40,9 @@ class Patient : public Person {
 
 class Doctor : public Person {
     // TODO
+	private:
+        	std::string specialization;
+        	std::vector<std::string> availableTimes;
 };
 
 
