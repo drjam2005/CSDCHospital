@@ -1,6 +1,16 @@
 # CSDCHospitalManagement
 
 ## // TODO
+### Key Features
+
+- [ ] Key Features:
+    - [ ] Patient Record Management: Add, edit, view, & remove patient records.
+    - [ ] Doctor Management: Add, edit, view, & remove doctor records.
+    - [ ] Appointment Setting: Assign a patient to a doctor at a particular schedule.
+    - [ ] Treatment Recording: Record symptoms of a patient and the treatment given by his doctor on a certain appointment.
+    - [ ] Data persistence: Store records in a file for future use. When the program runs, it must load all existing data from the file.
+
+##
 
 ### Person
 - [ ] Attributes
