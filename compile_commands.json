@@ -1,0 +1,15 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Iassets",
+      "-o",
+      "main",
+      "main.cpp"
+    ],
+    "directory": "/home/james/Documents/College/Year1/CSDC101/CSDCHospital",
+    "file": "/home/james/Documents/College/Year1/CSDC101/CSDCHospital/main.cpp",
+    "output": "/home/james/Documents/College/Year1/CSDC101/CSDCHospital/main"
+  }
+]
