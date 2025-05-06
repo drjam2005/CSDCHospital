@@ -44,7 +44,12 @@ class Doctor : public Person {
         	std::string specialization;
         	std::vector<std::string> availableTimes;
 	public:
-		//...
+	// constructor
+		Doctor(int givenID, std::string givenName, int givenAge, char givenSex, std:string givenSpecialization) : Person(int givenID, std::string givenName, int givenAge, char givenSex)
+			{
+				specialization = givenSpecialization;
+			}
+	// setters...
 };
 
 
