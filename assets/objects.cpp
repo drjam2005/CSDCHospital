@@ -13,7 +13,22 @@ class Person{
 	    age = givenAge;
 	    sex = givenSex;
 	}
-    // TODO
+
+	int getID(){
+	    return ID;
+	}
+
+	int getAge(){
+	    return age;
+	}
+
+	std::string getName(){
+	    return name;
+	}
+
+	char getSex(){
+	    return sex;
+	}
 };
 
 class Patient : public Person {
