@@ -52,3 +52,6 @@
     - [ ] Methods to add, remove, search, and update a doctor records
     - [ ] Method/s to manage appointments
 
+## Other Class/es
+### MainWindow
+- [ ] // TODO
