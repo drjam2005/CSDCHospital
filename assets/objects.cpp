@@ -1,5 +1,5 @@
 #include <string>
-
+#include <vector>
 
 
 // classes
@@ -43,6 +43,8 @@ class Doctor : public Person {
 	private:
         	std::string specialization;
         	std::vector<std::string> availableTimes;
+	public:
+		//...
 };
 
 
