@@ -12,6 +12,18 @@ class MainWindow {
 	
 	void mwPatientAdd(){
 	    cout << "\nFormat: (Name, Age, Sex)\n";    
+	    string name; int age; char sex;
+	    cout << "Name: ";
+	    getline(cin, name);
+	    cin.ignore();
+	    cout << "Age: ";
+	    while(!(cin >> age)){
+		cout << "Please enter a valid age!";
+		cin.clear();
+	    }
+	    cout << "Sex: ";
+	    cin >> sex;
+	    cout << "\n n: " << name << ", s: " << sex << ", a: " << age;
 	}
 };
 
