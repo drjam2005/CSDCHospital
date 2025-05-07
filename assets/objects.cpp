@@ -49,6 +49,12 @@ class Doctor : public Person {
 	    specialization = givenSpecialization;
 	}
 	// setters...
+		void addSchedule(std::string fulldate) {
+			availableTimes.pushback(fulldate);
+		}
+		void setSpecialization(std::string specialization) {
+			specialization = givenSpecialization;
+		}
 };
 
 
