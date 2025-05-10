@@ -34,6 +34,8 @@ class MainWindow {
 	void mwPatientsPrint(){
 	    Hospital.hospitalPrintPatients();
 	}
+
+
 };
 
 int main() {

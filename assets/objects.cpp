@@ -1,6 +1,8 @@
 #include <string>
+#include <sstream>
 #include <iostream>
 #include <vector>
+#include <fstream>
 
 // classes
 class Person{
@@ -95,9 +97,6 @@ struct Appointment{
 	}
 };
 
-
-
-
 class HospitalManager{
     private:
 	std::vector<Patient> patients;
@@ -105,13 +104,49 @@ class HospitalManager{
 	std::string patientSaveName;
 	std::string doctorSaveName;
     public:
-	HospitalManager(std::string givenPatientSaveName, std::string givenDoctorSaveName) : patientSaveName(givenPatientSaveName), doctorSaveName(givenDoctorSaveName) {}
+	HospitalManager(std::string givenPatientSaveName, std::string givenDoctorSaveName) : patientSaveName(givenPatientSaveName), doctorSaveName(givenDoctorSaveName) {
+	    hospitalLoadPatients();
+	}
+	
+	// Saving
+	void hospitalSavePatients(){
+	    std::ofstream patFile(patientSaveName);
+	    for(Patient& patient : patients){
+		patFile << patient.getID() << ";;"
+			<< patient.getName() << ";;"
+			<< patient.getAge() << ";;"
+			<< patient.getSex() << ";;" << '\n';
+	    }
+	    patFile.close();
+	    return;
+	}
+	// Loading
+	void hospitalLoadPatients(){
+	    patients.clear();
+	    std::ifstream patFile(patientSaveName);
+	    std::string line;
+	    while(std::getline(patFile, line)){
+		std::stringstream ss(line);
+		std::string name;
+		int id, age;
+		char cma, sex;
+
+		ss >> id >> cma >> cma;
+		std::getline(ss, name, ';');
+		ss >> cma >> age >> cma >> cma >> sex;
+		hospitalPatientAdd(name, age, sex, true);
+	    }
+	    return;
+	}
 
 	// Setters
-	void hospitalPatientAdd(std::string name, int age, char gender){
+	void hospitalPatientAdd(std::string name, int age, char gender, bool isLoad=false){
 	    int id = patients.size();
 	    Patient newPatient(id, name, age, gender);
 	    patients.push_back(newPatient);
+	    if(!isLoad){
+		hospitalSavePatients();
+	    }
 	}
 
 	void hospitalPrintPatients(){
