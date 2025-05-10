@@ -1,4 +1,5 @@
 #include <string>
+#include <iostream>
 #include <vector>
 
 // classes
@@ -34,7 +35,15 @@ class Person{
 };
 
 class Patient : public Person {
-    // TODO
+    private:
+	//// IDK
+	// std::vector<std::string> symptoms;
+	// std::vector<Appointment> appointments;
+    public:
+	Patient(int givenID, std::string givenName, int givenAge, char givenGender) : Person(givenID, givenName, givenAge, givenGender){}
+	void patientPrintInfo(){
+	    std::cout << "Name: " << Person::getName() << ", Age: " << Person::getAge() << ", Sex: " << Person::getSex();
+	}
 };
 
 class Doctor : public Person {
@@ -50,9 +59,9 @@ class Doctor : public Person {
 	}
 	// setters...
 		void addSchedule(std::string fulldate) {
-			availableTimes.pushback(fulldate);
+			availableTimes.push_back(fulldate);
 		}
-		void setSpecialization(std::string specialization) {
+		void setSpecialization(std::string givenSpecialization) {
 			specialization = givenSpecialization;
 		}
 };
@@ -76,12 +85,12 @@ struct Appointment{
 	    hour = givenHour;
 	}
 
-	void cancelAppointment(){
+	void appointmentCancel(){
 	    isCancelled = true;
 	    return;
 	}
 
-	void printAppointment(){
+	void appointmentGet(){
 	    return;
 	}
 };
@@ -98,6 +107,18 @@ class HospitalManager{
     public:
 	HospitalManager(std::string givenPatientSaveName, std::string givenDoctorSaveName) : patientSaveName(givenPatientSaveName), doctorSaveName(givenDoctorSaveName) {}
 
+	// Setters
+	void hospitalPatientAdd(std::string name, int age, char gender){
+	    int id = patients.size();
+	    Patient newPatient(id, name, age, gender);
+	    patients.push_back(newPatient);
+	}
 
+	void hospitalPrintPatients(){
+	    int i = 0;
+	    for(Patient& patient : patients){
+		std::cout << patient.getName() << '\n';
+	    }
+	}
 };
 
