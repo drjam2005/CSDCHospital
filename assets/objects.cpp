@@ -117,7 +117,7 @@ class HospitalManager{
 	void hospitalPrintPatients(){
 	    int i = 0;
 	    for(Patient& patient : patients){
-		std::cout << patient.getName() << '\n';
+		std::cout << '(' << i << ')' << patient.getName() << ", " << patient.getSex() << '\n';
 	    }
 	}
 };
