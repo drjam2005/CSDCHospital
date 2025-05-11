@@ -24,7 +24,7 @@ class MainWindow {
 		cin.clear();
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	    }
-	    cout << "Sex: ";
+	    cout << "Sex (M/F): ";
 	    cin >> sex;
 	    Hospital.hospitalPatientAdd(name, age, sex);
 	    cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -47,16 +47,34 @@ class MainWindow {
 		cin.clear();
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	    }
-	    cout << "Sex: ";
+	    cout << "Sex (M/F): ";
 	    cin >> sex;
 	    cout << "Specialization: ";
+	    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	    getline(cin, specialization);
 	    Hospital.hospitalDoctorAdd(name, age, sex, specialization);
-	    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	}
 	
-	void mwPrintDoctors(){
+	void mwDoctorsPrint(){
 	    Hospital.hospitalPrintDoctors();
+	}
+
+	void mwSetDoctorSchedule(){
+	    int id;
+	    cout << "Doctor ID: ";
+	    cin >> id;
+	    Doctor* chosenDoctor = Hospital.hospitalGetDoctor(id);
+	    if(chosenDoctor == nullptr || chosenDoctor->getName() == "_null"){
+		cout << "Doctor with ID: " << id << " doesn't exist!\n";
+		return;
+	    }
+
+	    cout << "Doctor: " << chosenDoctor->getName();
+	    return;
+	}
+
+	void mwSetAppointment(){
+	    return;
 	}
 };
 
@@ -65,10 +83,13 @@ int main() {
     MainWindow Window(ADNUHospital);
     while (true) {
 	int input;
-	std::cout << "--------------------------------------------------\n";
-	std::cout << "- (1) Add Patient (2) Add Doctor\n";
-	std::cout << "- (3) Print Patients (4) Print Doctors\n";
-	std::cout << "--------------------------------------------------\n";
+	std::cout << "------------------------  Add  ------------------------\n";
+	std::cout << "- (1) Add Patient 	      (2) Add Doctor\n";
+	std::cout << "------------------------ Print ------------------------\n";
+	std::cout << "- (3) Print Patients	      (4) Print Doctors\n";
+	std::cout << "------------------------  Set  ------------------------\n";
+	std::cout << "- (5) Set Doctor Schedule       (6) Set Appointment\n";
+	std::cout << "-------------------------------------------------------\n";
 	std::cout << "Input: ";
 	std::cin >> input;
 	std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -84,6 +105,12 @@ int main() {
 		break;
 	    case 4:
 		Window.mwDoctorsPrint();
+		break;
+	    case 5:
+		Window.mwSetDoctorSchedule();
+		break;
+	    case 6:
+		Window.mwSetAppointment();
 		break;
 	}
     }

@@ -68,9 +68,12 @@ class Doctor : public Person {
 	}
 
 	//getters
-	
 	std::string getSpecialization(){
 	    return specialization;
+	}
+
+	std::vector<std::string> getSchedules(){
+	    return availableTimes;
 	}
 };
 
@@ -102,7 +105,12 @@ struct Appointment{
 	    return;
 	}
 };
+// null objects
+Doctor nullDoctor(-1, "_null", -1, '_', "null");
+Patient nullPatient(-1, "_null", -1, '_');
 
+
+// main 
 class HospitalManager{
     private:
 	std::vector<Patient> patients;
@@ -110,8 +118,9 @@ class HospitalManager{
 	std::string patientSaveName;
 	std::string doctorSaveName;
     public:
-	HospitalManager(std::string givenPatientSalveName, std::string givenDoctorSaveName) : patientSaveName(givenPatientSaveName), doctorSaveName(givenDoctorSaveName) {
+	HospitalManager(std::string givenPatientSaveName, std::string givenDoctorSaveName) : patientSaveName(givenPatientSaveName), doctorSaveName(givenDoctorSaveName) {
 	    hospitalLoadPatients();
+	    hospitalLoadDoctors();
 	}
 	
 	// Saving
@@ -173,7 +182,7 @@ class HospitalManager{
 		ss >> cma >> age >> cma >> cma >> sex;
 		std::getline(ss, specialization, ';');
 		ss >> cma;
-		hospitalDoctorrAdd(name, age, sex, specialization);
+		hospitalDoctorAdd(name, age, sex, specialization, true);
 	    }
 	    return;
 	}
@@ -192,9 +201,43 @@ class HospitalManager{
 	    int id = doctors.size();
 	    Doctor newDoctor(id, name, age, gender, specialization);
 	    doctors.push_back(newDoctor);
+	    if(!isLoad){
+		hospitalSaveDoctors();
+	    }
 	    return;
 	}
+
+	void hospitalSetDoctorSchedule(int id, std::string fulldate){
+	    for(Doctor& doctor : doctors){
+		if(doctor.getID() == id){
+		    doctor.addSchedule(fulldate);
+		    return;
+		}
+	    }
+	}
+
+	void hospitalSetAppointment(){
+	   return;
+	}
 	// Getters
+	
+	Patient hospitalGetPatient(int id){
+	    for(Patient& patient : patients){
+		if(patient.getID() == id){
+		    return patient;
+		}
+	    }
+	    return nullPatient;
+	}
+
+	Doctor* hospitalGetDoctor(int id){
+	    for(Doctor& doctor : doctors){
+		if(doctor.getID() == id)
+		    return &doctor;
+	    }
+	    return nullptr;
+	}
+
 	void hospitalPrintPatients(){
 	    for(Patient& patient : patients){
 		    std::cout << '(' << patient.getID() << ')' << patient.getName() << ", " << patient.getSex() << '\n';
