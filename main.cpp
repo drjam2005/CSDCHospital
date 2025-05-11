@@ -105,7 +105,12 @@ class MainWindow {
 		return;
 	    }
 
-	    cout << "sigma";
+	    int i = 0;
+	    for(string sched : doctor->getSchedules()){
+		std::cout << '(' << i << "): " << sched << '\n';
+		i++;
+	    }
+
 	    return;
     }
 };
