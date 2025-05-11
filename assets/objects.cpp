@@ -214,7 +214,6 @@ class HospitalManager{
 		if(doctor.getID() == id){
 		    doctor.addSchedule(fulldate);
 		    schedules.push_back(std::to_string(id)+":"+fulldate);
-		    hospitalPrintSchedules();
 		    return;
 		}
 	    }

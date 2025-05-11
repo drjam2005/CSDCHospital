@@ -94,8 +94,8 @@ class MainWindow {
 };
 
 int main() {
-    HospitalManager ADNUHospital("db/patientSave.txt", "db/doctorSave.txt", "db/schedulesSave.txt");
-    MainWindow Window(ADNUHospital);
+    HospitalManager MainHospital("db/patientSave.txt", "db/doctorSave.txt", "db/schedulesSave.txt");
+    MainWindow Window(MainHospital);
     while (true) {
 	int input;
 	std::cout << "------------------------  Add  ------------------------\n";
