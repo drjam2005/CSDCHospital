@@ -60,7 +60,9 @@ class MainWindow {
 	}
 
 	void mwSetDoctorSchedule(){
-	    int id;
+	    int id, hs, he;
+	    string dd, mm, yyyy;
+
 	    cout << "Doctor ID: ";
 	    cin >> id;
 	    Doctor* chosenDoctor = Hospital.hospitalGetDoctor(id);
@@ -69,7 +71,20 @@ class MainWindow {
 		return;
 	    }
 
-	    cout << "Doctor: " << chosenDoctor->getName();
+	    cout << "Doctor: " << chosenDoctor->getName() << '\n';
+	    cout << "Schedule to add:\nFormat (DD MM YYYY)\nInput: ";
+	    cin >> dd >> mm >> yyyy;
+	    
+	    // parsing date
+	    if(stoi(dd) < 10)
+		dd = "0" + dd;
+	    if(stoi(mm) < 10)
+		mm = "0" + mm;
+	    
+	    cout << "Hours:\nFormat (hourStart hourEnd) (ex: 10 15 [10am -> 3pm])\nInput: ";
+	    cin >> hs >> he;
+	    string fulldate = yyyy + mm + dd + "_" + to_string(hs) + ',' + to_string(he);
+	    Hospital.hospitalSetDoctorSchedule(id, fulldate);
 	    return;
 	}
 
@@ -79,14 +94,14 @@ class MainWindow {
 };
 
 int main() {
-    HospitalManager ADNUHospital("db/patientSave.txt", "db/doctorSave.txt");
+    HospitalManager ADNUHospital("db/patientSave.txt", "db/doctorSave.txt", "db/schedulesSave.txt");
     MainWindow Window(ADNUHospital);
     while (true) {
 	int input;
 	std::cout << "------------------------  Add  ------------------------\n";
-	std::cout << "- (1) Add Patient 	      (2) Add Doctor\n";
+	std::cout << "- (1) Add Patient               (2) Add Doctor\n";
 	std::cout << "------------------------ Print ------------------------\n";
-	std::cout << "- (3) Print Patients	      (4) Print Doctors\n";
+	std::cout << "- (3) Print Patients            (4) Print Doctors\n";
 	std::cout << "------------------------  Set  ------------------------\n";
 	std::cout << "- (5) Set Doctor Schedule       (6) Set Appointment\n";
 	std::cout << "-------------------------------------------------------\n";

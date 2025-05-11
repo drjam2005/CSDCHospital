@@ -115,10 +115,12 @@ class HospitalManager{
     private:
 	std::vector<Patient> patients;
 	std::vector<Doctor> doctors;
+	std::vector<std::string> schedules;
 	std::string patientSaveName;
 	std::string doctorSaveName;
+	std::string scheduleSaveName;
     public:
-	HospitalManager(std::string givenPatientSaveName, std::string givenDoctorSaveName) : patientSaveName(givenPatientSaveName), doctorSaveName(givenDoctorSaveName) {
+	HospitalManager(std::string givenPatientSaveName, std::string givenDoctorSaveName, std::string givenScheduleSaveName) : patientSaveName(givenPatientSaveName), doctorSaveName(givenDoctorSaveName), scheduleSaveName(givenScheduleSaveName) {
 	    hospitalLoadPatients();
 	    hospitalLoadDoctors();
 	}
@@ -211,6 +213,8 @@ class HospitalManager{
 	    for(Doctor& doctor : doctors){
 		if(doctor.getID() == id){
 		    doctor.addSchedule(fulldate);
+		    schedules.push_back(std::to_string(id)+":"+fulldate);
+		    hospitalPrintSchedules();
 		    return;
 		}
 	    }
@@ -247,6 +251,16 @@ class HospitalManager{
 	void hospitalPrintDoctors(){
 	    for(Doctor& doctor : doctors){
 		    std::cout << '(' << doctor.getID() << ')' << doctor.getName() << ", " << doctor.getSex() << ", " << doctor.getSpecialization() << '\n';
+	    }
+	}
+
+	void hospitalPrintSchedules(){
+	    for(Doctor& doctor : doctors){
+		if(doctor.getSchedules().size() == 0)
+		    continue;
+		for(std::string sched : doctor.getSchedules()){
+		    std::cout << sched << '\n';
+		}
 	    }
 	}
 };
