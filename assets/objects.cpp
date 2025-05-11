@@ -60,12 +60,18 @@ class Doctor : public Person {
 	    specialization = givenSpecialization;
 	}
 	// setters...
-		void addSchedule(std::string fulldate) {
-			availableTimes.push_back(fulldate);
-		}
-		void setSpecialization(std::string givenSpecialization) {
-			specialization = givenSpecialization;
-		}
+	void addSchedule(std::string fulldate) {
+	    availableTimes.push_back(fulldate);
+	}
+	void setSpecialization(std::string givenSpecialization) {
+	    specialization = givenSpecialization;
+	}
+
+	//getters
+	
+	std::string getSpecialization(){
+	    return specialization;
+	}
 };
 
 
@@ -104,7 +110,7 @@ class HospitalManager{
 	std::string patientSaveName;
 	std::string doctorSaveName;
     public:
-	HospitalManager(std::string givenPatientSaveName, std::string givenDoctorSaveName) : patientSaveName(givenPatientSaveName), doctorSaveName(givenDoctorSaveName) {
+	HospitalManager(std::string givenPatientSalveName, std::string givenDoctorSaveName) : patientSaveName(givenPatientSaveName), doctorSaveName(givenDoctorSaveName) {
 	    hospitalLoadPatients();
 	}
 	
@@ -118,6 +124,19 @@ class HospitalManager{
 			<< patient.getSex() << ";;" << '\n';
 	    }
 	    patFile.close();
+	    return;
+	}
+
+	void hospitalSaveDoctors(){
+	    std::ofstream docFile(doctorSaveName);
+	    for(Doctor& doctor : doctors){
+		docFile << doctor.getID() << ";;"
+			<< doctor.getName() << ";;"
+			<< doctor.getAge() << ";;"
+			<< doctor.getSex() << ";;"
+			<< doctor.getSpecialization() << ";;" << '\n';
+	    }
+	    docFile.close();
 	    return;
 	}
 	// Loading
@@ -139,6 +158,26 @@ class HospitalManager{
 	    return;
 	}
 
+	void hospitalLoadDoctors(){
+	    doctors.clear();
+	    std::ifstream docFile(doctorSaveName);
+	    std::string line;
+	    while(std::getline(docFile, line)){
+		std::stringstream ss(line);
+		std::string name, specialization;
+		int id, age;
+		char cma, sex;
+
+		ss >> id >> cma >> cma;
+		std::getline(ss, name, ';');
+		ss >> cma >> age >> cma >> cma >> sex;
+		std::getline(ss, specialization, ';');
+		ss >> cma;
+		hospitalDoctorrAdd(name, age, sex, specialization);
+	    }
+	    return;
+	}
+
 	// Setters
 	void hospitalPatientAdd(std::string name, int age, char gender, bool isLoad=false){
 	    int id = patients.size();
@@ -148,11 +187,23 @@ class HospitalManager{
 		hospitalSavePatients();
 	    }
 	}
-
+	
+	void hospitalDoctorAdd(std::string name, int age, char gender, std::string specialization, bool isLoad=false){
+	    int id = doctors.size();
+	    Doctor newDoctor(id, name, age, gender, specialization);
+	    doctors.push_back(newDoctor);
+	    return;
+	}
+	// Getters
 	void hospitalPrintPatients(){
-	    int i = 0;
 	    for(Patient& patient : patients){
-		std::cout << '(' << i << ')' << patient.getName() << ", " << patient.getSex() << '\n';
+		    std::cout << '(' << patient.getID() << ')' << patient.getName() << ", " << patient.getSex() << '\n';
+	    }
+	}
+
+	void hospitalPrintDoctors(){
+	    for(Doctor& doctor : doctors){
+		    std::cout << '(' << doctor.getID() << ')' << doctor.getName() << ", " << doctor.getSex() << ", " << doctor.getSpecialization() << '\n';
 	    }
 	}
 };
