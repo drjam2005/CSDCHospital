@@ -85,12 +85,29 @@ class MainWindow {
 	    cin >> hs >> he;
 	    string fulldate = yyyy + mm + dd + "_" + to_string(hs) + ',' + to_string(he);
 	    Hospital.hospitalSetDoctorSchedule(id, fulldate);
-	    return;
+
 	}
 
 	void mwSetAppointment(){
+	    int patID, docID;
+	    cout << "Patient ID: ";
+	    cin >> patID;
+	    Patient* patient = Hospital.hospitalGetPatient(patID);
+	    if(patient == nullptr || patient->getName() == "_null"){
+		cout << "Patient with ID: " << patID << " doesn't exist!\n";
+		return;
+	    }
+	    cout << "Doctor ID : ";
+	    cin >> docID;
+	    Doctor* doctor = Hospital.hospitalGetDoctor(docID);
+	    if(doctor == nullptr || doctor->getName() == "_null"){
+		cout << "Doctor with ID: " << docID << " doesn't exist!\n";
+		return;
+	    }
+
+	    cout << "sigma";
 	    return;
-	}
+    }
 };
 
 int main() {

@@ -224,13 +224,13 @@ class HospitalManager{
 	}
 	// Getters
 	
-	Patient hospitalGetPatient(int id){
+	Patient* hospitalGetPatient(int id){
 	    for(Patient& patient : patients){
 		if(patient.getID() == id){
-		    return patient;
+		    return &patient;
 		}
 	    }
-	    return nullPatient;
+	    return nullptr;
 	}
 
 	Doctor* hospitalGetDoctor(int id){
