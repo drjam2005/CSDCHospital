@@ -108,7 +108,7 @@ class MainWindow {
 		cout << "Doctor " << doctor->getName() << " doesn't have any schedules yet!\n";
 		return;
 	    }
-
+	    cout << "\nDoctor " << doctor->getName() << "'s Schedules:\n";
 	    Hospital.hospitalPrintDoctorSchedules(docID);
 
 	    return;

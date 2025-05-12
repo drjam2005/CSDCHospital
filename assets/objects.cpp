@@ -310,6 +310,7 @@ class HospitalManager{
 			std::cout << '(' << i << "): " << parseDate(date) << " " << hs << ":00 to " << he << ":00\n";
 			i++;
 		    }
+		    return;
 		}
 	    }
 	}
