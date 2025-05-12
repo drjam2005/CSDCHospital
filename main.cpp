@@ -66,13 +66,14 @@ class MainWindow {
 	    cout << "Doctor ID: ";
 	    cin >> id;
 	    Doctor* chosenDoctor = Hospital.hospitalGetDoctor(id);
+
 	    if(chosenDoctor == nullptr || chosenDoctor->getName() == "_null"){
 		cout << "Doctor with ID: " << id << " doesn't exist!\n";
 		return;
 	    }
 
-	    cout << "Doctor: " << chosenDoctor->getName() << '\n';
-	    cout << "Schedule to add:\nFormat (DD MM YYYY)\nInput: ";
+	    cout << "\n  Chosen Doctor: " << chosenDoctor->getName() << '\n';
+	    cout << "  Schedule to add:\n\tFormat (DD MM YYYY)\n\tDate: ";
 	    cin >> dd >> mm >> yyyy;
 	    
 	    // parsing date
@@ -81,7 +82,7 @@ class MainWindow {
 	    if(stoi(mm) < 10)
 		mm = "0" + mm;
 	    
-	    cout << "Hours:\nFormat (hourStart hourEnd) (ex: 10 15 [10am -> 3pm])\nInput: ";
+	    cout << "\n\tFormat (hourStart hourEnd)\n\t       (ex: 10 15 ) [10am -> 3pm]\n\tHours: ";
 	    cin >> hs >> he;
 	    string fulldate = yyyy + mm + dd + (char)0x1F + to_string(hs) + ',' + to_string(he);
 	    Hospital.hospitalSetDoctorSchedule(id, fulldate);
@@ -108,10 +109,28 @@ class MainWindow {
 		cout << "Doctor " << doctor->getName() << " doesn't have any schedules yet!\n";
 		return;
 	    }
+
+	    cout << "\nPatient: " << patient->getName();
+	    cout << "\nDoctor: " << doctor->getName() << ", Specialization: " << doctor->getSpecialization();
 	    cout << "\nDoctor " << doctor->getName() << "'s Schedules:\n";
 	    Hospital.hospitalPrintDoctorSchedules(docID);
+	    
+	    int chosenSched;
+	    cout << "\nChoose a schedule from the doctor: ";
+	    cin >> chosenSched;
 
+	    // Hospital.hospitalAddAppointment(patID, docID, chosenSched, chosenHour);
 	    return;
+    }
+
+    void mwPatientAppointmentsPrint(){
+	int patID;
+	cout << "Patient ID: ";
+	return;
+    }
+
+    void mwRecordCheckup(){
+	return;
     }
 };
 
@@ -120,13 +139,16 @@ int main() {
     MainWindow Window(MainHospital);
     while (true) {
 	int input;
-	std::cout << "------------------------  Add  ------------------------\n";
-	std::cout << "- (1) Add Patient               (2) Add Doctor\n";
-	std::cout << "------------------------ Print ------------------------\n";
-	std::cout << "- (3) Print Patients            (4) Print Doctors\n";
-	std::cout << "------------------------  Set  ------------------------\n";
-	std::cout << "- (5) Set Doctor Schedule       (6) Set Appointment\n";
-	std::cout << "-------------------------------------------------------\n";
+	std::cout << "---------------------------   Add   ---------------------------\n";
+	std::cout << "- (1) Add Patient                  (2) Add Doctor\n";
+	std::cout << "---------------------------   Set   ---------------------------\n";
+	std::cout << "- (3) Set Doctor Schedule          (4) Set Appointment\n";
+	std::cout << "---------------------------  Print  ---------------------------\n";
+	std::cout << "- (5) Print Patients               (6) Print Doctors\n";
+	std::cout << "- (7) Print Patient Appointments\n";
+	std::cout << "--------------------------- Records ---------------------------\n";
+	std::cout << "- (8) Record Checkup\n";
+	std::cout << "---------------------------------------------------------------\n";
 	std::cout << "Input: ";
 	std::cin >> input;
 	std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -138,16 +160,19 @@ int main() {
 		Window.mwDoctorAdd();
 		break;
 	    case 3:
-		Window.mwPatientsPrint();
-		break;
-	    case 4:
-		Window.mwDoctorsPrint();
-		break;
-	    case 5:
 		Window.mwSetDoctorSchedule();
 		break;
-	    case 6:
+	    case 4:
 		Window.mwSetAppointment();
+		break;
+	    case 5:
+		Window.mwPatientsPrint();
+		break;
+	    case 6:
+		Window.mwDoctorsPrint();
+		break;
+	    case 7:
+		Window.mwPatientAppointmentsPrint();
 		break;
 	}
     }
