@@ -123,6 +123,7 @@ class HospitalManager{
 	HospitalManager(std::string givenPatientSaveName, std::string givenDoctorSaveName, std::string givenScheduleSaveName) : patientSaveName(givenPatientSaveName), doctorSaveName(givenDoctorSaveName), scheduleSaveName(givenScheduleSaveName) {
 	    hospitalLoadPatients();
 	    hospitalLoadDoctors();
+	    hospitalLoadSchedules();
 	}
 	
 	// Saving
@@ -150,6 +151,19 @@ class HospitalManager{
 	    docFile.close();
 	    return;
 	}
+
+	void hospitalSaveSchedules(){
+	    std::ofstream schedFile(scheduleSaveName);
+	    for(Doctor& doctor : doctors){
+		if(doctor.getSchedules().size() <= 0)
+		    continue;
+		for(std::string sched : doctor.getSchedules()){
+		    schedFile << doctor.getID() << ";;" << sched << '\n';
+		}
+	    }
+	    schedFile.close();
+	}
+
 	// Loading
 	void hospitalLoadPatients(){
 	    patients.clear();
@@ -188,7 +202,22 @@ class HospitalManager{
 	    }
 	    return;
 	}
-
+	
+	void hospitalLoadSchedules(){
+	    schedules.clear();
+	    std::ifstream schedFile(scheduleSaveName);
+	    std::string line;
+	    while(std::getline(schedFile, line)){
+		std::stringstream ss(line);
+		int docID;
+		std::string fulldate;
+		char cma;
+		
+		ss >> docID >> cma >> cma >> fulldate;
+		hospitalSetDoctorSchedule(docID,  fulldate, true);
+	    }
+	    schedFile.close();
+	}
 	// Setters
 	void hospitalPatientAdd(std::string name, int age, char gender, bool isLoad=false){
 	    int id = patients.size();
@@ -209,11 +238,14 @@ class HospitalManager{
 	    return;
 	}
 
-	void hospitalSetDoctorSchedule(int id, std::string fulldate){
+	void hospitalSetDoctorSchedule(int id, std::string fulldate, bool isLoad=false){
 	    for(Doctor& doctor : doctors){
 		if(doctor.getID() == id){
 		    doctor.addSchedule(fulldate);
 		    schedules.push_back(std::to_string(id)+":"+fulldate);
+		    if(!isLoad){
+			hospitalSaveSchedules();
+		    }
 		    return;
 		}
 	    }

@@ -104,6 +104,10 @@ class MainWindow {
 		cout << "Doctor with ID: " << docID << " doesn't exist!\n";
 		return;
 	    }
+	    if(doctor->getSchedules().size() <= 0){
+		cout << "Doctor " << doctor->getName() << " doesn't have any schedules yet!\n";
+		return;
+	    }
 
 	    int i = 0;
 	    for(string sched : doctor->getSchedules()){
