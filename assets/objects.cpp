@@ -110,6 +110,15 @@ Doctor nullDoctor(-1, "_null", -1, '_', "null");
 Patient nullPatient(-1, "_null", -1, '_');
 
 //functions
+const std::string months[12] = {"January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+std::string parseDate(int date){
+    std::string fulldate = std::to_string(date);
+    std::string year = fulldate.substr(0,4);
+    std::string month = months[std::stoi(fulldate.substr(4,2))-1];
+    int day = std::stoi(fulldate.substr(6));
+    std::string full = month + " " + std::to_string(day) + ", " + year;
+    return full;
+}
 
 // main 
 class HospitalManager{
@@ -298,7 +307,7 @@ class HospitalManager{
 			std::stringstream ss(sched);
 
 			ss >> date >> chr >> hs >> chr >> he;
-			std::cout << '(' << i << "): " << date << " " << hs << ":00 to " << he << ":00\n";
+			std::cout << '(' << i << "): " << parseDate(date) << " " << hs << ":00 to " << he << ":00\n";
 			i++;
 		    }
 		}
