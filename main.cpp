@@ -83,7 +83,7 @@ class MainWindow {
 	    
 	    cout << "Hours:\nFormat (hourStart hourEnd) (ex: 10 15 [10am -> 3pm])\nInput: ";
 	    cin >> hs >> he;
-	    string fulldate = yyyy + mm + dd + "_" + to_string(hs) + ',' + to_string(he);
+	    string fulldate = yyyy + mm + dd + (char)0x1F + to_string(hs) + ',' + to_string(he);
 	    Hospital.hospitalSetDoctorSchedule(id, fulldate);
 
 	}
@@ -109,11 +109,7 @@ class MainWindow {
 		return;
 	    }
 
-	    int i = 0;
-	    for(string sched : doctor->getSchedules()){
-		std::cout << '(' << i << "): " << sched << '\n';
-		i++;
-	    }
+	    Hospital.hospitalPrintDoctorSchedules(docID);
 
 	    return;
     }

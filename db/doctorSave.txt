@@ -1,6 +1,2 @@
-0;;John;;20;;M;;;;
-1;;okay;;20;;M;;;;
-2;;okayyyy;;20;;M;;;;
-3;;test;;200;;m;;;;
-4;;tester;;200;;m;;;;
-5;;tester;;20;;m;;okaaypo;;
+0John20M
+1okay20M

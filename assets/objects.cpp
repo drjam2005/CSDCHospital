@@ -109,6 +109,7 @@ struct Appointment{
 Doctor nullDoctor(-1, "_null", -1, '_', "null");
 Patient nullPatient(-1, "_null", -1, '_');
 
+//functions
 
 // main 
 class HospitalManager{
@@ -130,10 +131,10 @@ class HospitalManager{
 	void hospitalSavePatients(){
 	    std::ofstream patFile(patientSaveName);
 	    for(Patient& patient : patients){
-		patFile << patient.getID() << ";;"
-			<< patient.getName() << ";;"
-			<< patient.getAge() << ";;"
-			<< patient.getSex() << ";;" << '\n';
+		patFile << patient.getID() << (char)0x1F
+			<< patient.getName() << (char)0x1F
+			<< patient.getAge() << (char)0x1F
+			<< patient.getSex() << (char)0x1F << '\n';
 	    }
 	    patFile.close();
 	    return;
@@ -142,11 +143,11 @@ class HospitalManager{
 	void hospitalSaveDoctors(){
 	    std::ofstream docFile(doctorSaveName);
 	    for(Doctor& doctor : doctors){
-		docFile << doctor.getID() << ";;"
-			<< doctor.getName() << ";;"
-			<< doctor.getAge() << ";;"
-			<< doctor.getSex() << ";;"
-			<< doctor.getSpecialization() << ";;" << '\n';
+		docFile << doctor.getID() << (char)0x1F
+			<< doctor.getName() << (char)0x1F
+			<< doctor.getAge() << (char)0x1F
+			<< doctor.getSex() << (char)0x1F
+			<< doctor.getSpecialization() << (char)0x1F << '\n';
 	    }
 	    docFile.close();
 	    return;
@@ -158,10 +159,11 @@ class HospitalManager{
 		if(doctor.getSchedules().size() <= 0)
 		    continue;
 		for(std::string sched : doctor.getSchedules()){
-		    schedFile << doctor.getID() << ";;" << sched << '\n';
+		    schedFile << doctor.getID() << (char)0x1F << sched << '\n';
 		}
 	    }
 	    schedFile.close();
+	    return;
 	}
 
 	// Loading
@@ -175,9 +177,9 @@ class HospitalManager{
 		int id, age;
 		char cma, sex;
 
-		ss >> id >> cma >> cma;
-		std::getline(ss, name, ';');
-		ss >> cma >> age >> cma >> cma >> sex;
+		ss >> id >> cma;
+		std::getline(ss, name, (char)0x1F);
+		ss >> cma >> age >> cma >> sex;
 		hospitalPatientAdd(name, age, sex, true);
 	    }
 	    return;
@@ -193,11 +195,10 @@ class HospitalManager{
 		int id, age;
 		char cma, sex;
 
-		ss >> id >> cma >> cma;
-		std::getline(ss, name, ';');
-		ss >> cma >> age >> cma >> cma >> sex;
-		std::getline(ss, specialization, ';');
-		ss >> cma;
+		ss >> id >> cma;
+		std::getline(ss, name, (char)0x1F);
+		ss >> cma >> age >> cma >> sex;
+		std::getline(ss, specialization, (char)0x1F);
 		hospitalDoctorAdd(name, age, sex, specialization, true);
 	    }
 	    return;
@@ -213,7 +214,7 @@ class HospitalManager{
 		std::string fulldate;
 		char cma;
 		
-		ss >> docID >> cma >> cma >> fulldate;
+		ss >> docID >> cma >> fulldate;
 		hospitalSetDoctorSchedule(docID,  fulldate, true);
 	    }
 	    schedFile.close();
@@ -242,7 +243,7 @@ class HospitalManager{
 	    for(Doctor& doctor : doctors){
 		if(doctor.getID() == id){
 		    doctor.addSchedule(fulldate);
-		    schedules.push_back(std::to_string(id)+":"+fulldate);
+		    schedules.push_back(std::to_string(id)+(char)0x1F+fulldate);
 		    if(!isLoad){
 			hospitalSaveSchedules();
 		    }
@@ -285,12 +286,21 @@ class HospitalManager{
 	    }
 	}
 
-	void hospitalPrintSchedules(){
+	void hospitalPrintDoctorSchedules(int id){
 	    for(Doctor& doctor : doctors){
-		if(doctor.getSchedules().size() == 0)
-		    continue;
-		for(std::string sched : doctor.getSchedules()){
-		    std::cout << sched << '\n';
+		if(doctor.getID() == id){
+		    if(doctor.getSchedules().size() == 0)
+			continue;
+		    int i = 0;
+		    for(std::string sched : doctor.getSchedules()){
+			int date, hs, he;
+			char chr;
+			std::stringstream ss(sched);
+
+			ss >> date >> chr >> hs >> chr >> he;
+			std::cout << '(' << i << "): " << date << " " << hs << ":00 to " << he << ":00\n";
+			i++;
+		    }
 		}
 	    }
 	}
