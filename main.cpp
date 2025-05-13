@@ -135,6 +135,13 @@ class MainWindow {
 	cout << "Patient ID: ";
 	cin >> patID;
 	
+	Patient* patient = Hospital.hospitalGetPatient(patID);
+	if(patient == nullptr){
+	    cout << "Patient with this ID doesn't exist!!\n";
+	    return;
+	}
+
+	patient->printAppointments();
 	return;
     }
 

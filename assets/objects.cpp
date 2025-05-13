@@ -4,6 +4,17 @@
 #include <vector>
 #include <fstream>
 
+const std::string months[12] = {"January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+
+std::string parseDate(int date){
+    std::string fulldate = std::to_string(date);
+    std::string year = fulldate.substr(0,4);
+    std::string month = months[std::stoi(fulldate.substr(4,2))-1];
+    int day = std::stoi(fulldate.substr(6));
+    std::string full = month + " " + std::to_string(day) + ", " + year;
+    return full;
+}
+
 // classes
 class Person{
     private:
@@ -66,6 +77,14 @@ struct Appointment{
 	    return appID;
 	}
 
+	int getPatID(){
+	    return patID;
+	}
+
+	int getDocID(){
+	    return docID;
+	}
+
 	int getHour(){
 	    return chosenHour;
 	}
@@ -85,6 +104,12 @@ class Patient : public Person {
 
 	void addAppointment(Appointment app){
 	    appointments.push_back(app);
+	}
+
+	void printAppointments(){
+	    for(int i = 0; i < appointments.size(); ++i){
+		std::cout << '(' << i << "): " << appointments[i].getSched() << '\n';
+	    }
 	}
 };
 
@@ -122,16 +147,6 @@ Doctor nullDoctor(-1, "_null", -1, '_', "null");
 Patient nullPatient(-1, "_null", -1, '_');
 
 //functions
-const std::string months[12] = {"January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
-
-std::string parseDate(int date){
-    std::string fulldate = std::to_string(date);
-    std::string year = fulldate.substr(0,4);
-    std::string month = months[std::stoi(fulldate.substr(4,2))-1];
-    int day = std::stoi(fulldate.substr(6));
-    std::string full = month + " " + std::to_string(day) + ", " + year;
-    return full;
-}
 
 std::vector<int> vecDate(std::string sched){
     std::stringstream ss(sched);
@@ -158,7 +173,7 @@ class HospitalManager{
 	    hospitalLoadPatients();
 	    hospitalLoadDoctors();
 	    hospitalLoadSchedules();
-	    // hospitalLoadAppointments();
+	    hospitalLoadAppointments();
 	}
 	
 	// Saving
@@ -203,7 +218,7 @@ class HospitalManager{
 	void hospitalSaveAppointments(){
 	    std::ofstream appFile(appointmentSaveName);
 	    for(Appointment& app : appointments){
-		appFile << app.getID() << ',' << app.getSched() << ',' << app.getHour() << '\n';
+		appFile << app.getID() << ',' << app.getPatID() << ',' << app.getDocID() << ',' << app.getSched() << ';' << app.getHour() << '\n';
 	    }
 	    appFile.close();
 	}
@@ -266,11 +281,12 @@ class HospitalManager{
 	    std::ifstream appFile(appointmentSaveName);
 	    std::string line;
 	    while(std::getline(appFile, line)){
+		std::stringstream ss(line);
 		int appID, patID, docID, hour;
 		std::string sched;
 		char chr;
-		std::stringstream ss(line);
-		ss >> appID >> chr >> patID >> chr >> docID;
+
+		ss >> appID >> chr >> patID >> chr >> docID >> chr;
 		std::getline(ss, sched, ';');
 		ss >> hour;
 
@@ -278,9 +294,10 @@ class HospitalManager{
 		Patient* patient = hospitalGetPatient(patID);
 
 		patient->addAppointment(app);
-		hospitalSetAppointment(patID, docID, sched, hour);
+		hospitalSetAppointment(patID, docID, sched, hour, false);
 
 	    }
+	    appFile.close();
 	    return;
 	}
 	// Setters
@@ -318,7 +335,6 @@ class HospitalManager{
 
 	void hospitalSetAppointment(int patID, int docID, std::string chosenSched, int chosenHour, bool isLoad=false){
 	    // Patient shit...
-	    
 	    int appID = appointments.size();
 	    Appointment app(appID, patID, docID, chosenSched, chosenHour);
 	    appointments.push_back(app);
