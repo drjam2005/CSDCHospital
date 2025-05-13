@@ -121,20 +121,32 @@ std::string parseDate(int date){
     return full;
 }
 
+std::vector<int> vecDate(std::string sched){
+    std::stringstream ss(sched);
+    int date, hs, he;
+    char chr;
+    ss >> date >> chr >> hs >> chr >> he;
+    std::vector<int> vec = {date, hs, he};
+    return vec;
+}
+
 // main 
 class HospitalManager{
     private:
 	std::vector<Patient> patients;
 	std::vector<Doctor> doctors;
 	std::vector<std::string> schedules;
+	std::vector<std::string> appointments;
 	std::string patientSaveName;
 	std::string doctorSaveName;
 	std::string scheduleSaveName;
+	std::string appointmentSaveName;
     public:
-	HospitalManager(std::string givenPatientSaveName, std::string givenDoctorSaveName, std::string givenScheduleSaveName) : patientSaveName(givenPatientSaveName), doctorSaveName(givenDoctorSaveName), scheduleSaveName(givenScheduleSaveName) {
+	HospitalManager(std::string givenPatientSaveName, std::string givenDoctorSaveName, std::string givenScheduleSaveName, std::string givenAppointmentSaveName) : patientSaveName(givenPatientSaveName), doctorSaveName(givenDoctorSaveName), scheduleSaveName(givenScheduleSaveName), appointmentSaveName(givenAppointmentSaveName) {
 	    hospitalLoadPatients();
 	    hospitalLoadDoctors();
 	    hospitalLoadSchedules();
+	    // hospitalLoadAppointments();
 	}
 	
 	// Saving
@@ -175,7 +187,14 @@ class HospitalManager{
 	    schedFile.close();
 	    return;
 	}
-
+	
+	void hospitalSaveAppointments(){
+	    std::ofstream appFile(appointmentSaveName);
+	    for(std::string& app : appointments){
+		std::cout << app << " ";
+	    }
+	    appFile.close();
+	}
 	// Loading
 	void hospitalLoadPatients(){
 	    patients.clear();
@@ -262,11 +281,22 @@ class HospitalManager{
 	    }
 	}
 
-	void hospitalSetAppointment(){
-	   return;
+	void hospitalSetAppointment(int patID, int docID, int chosenSched, int chosenHour){
+	    // Patient shit...
+	    
+	    for(Doctor& doctor : doctors){
+		if(doctor.getID() == docID){
+		    std::string sched = doctor.getSchedules()[chosenSched-1];
+		    int schedID = schedules.size();
+		    std::string fullSched = std::to_string(schedID) + ',' + std::to_string(patID) + ',' + std::to_string(docID) + ',' + sched + ',' + std::to_string(chosenHour);
+		    schedules.push_back(fullSched);
+		}
+	    }
+	    return;
 	}
+
+
 	// Getters
-	
 	Patient* hospitalGetPatient(int id){
 	    for(Patient& patient : patients){
 		if(patient.getID() == id){

@@ -120,8 +120,12 @@ class MainWindow {
 	    cin >> chosenSched;
 	    
 	    string schedule = Hospital.hospitalGetSchedule(docID, chosenSched);
+	    vector<int> sched = vecDate(doctor->getSchedules()[chosenSched-1]);
 	    cout << "\nSched: " << schedule << '\n';
-	    // Hospital.hospitalAddAppointment(patID, docID, chosenSched, chosenHour);
+	    cout << "Choose hour (" << sched[1] << " -> " << sched[2] << "): ";
+	    int chosenHour;
+	    cin >> chosenHour;
+	    Hospital.hospitalSetAppointment(patID, docID, chosenSched, chosenHour);
 	    return;
     }
 
@@ -137,7 +141,7 @@ class MainWindow {
 };
 
 int main() {
-    HospitalManager MainHospital("db/patientSave.txt", "db/doctorSave.txt", "db/schedulesSave.txt");
+    HospitalManager MainHospital("db/patientSave.txt", "db/doctorSave.txt", "db/schedulesSave.txt", "db/appointmentsSave.txt");
     MainWindow Window(MainHospital);
     while (true) {
 	int input;
