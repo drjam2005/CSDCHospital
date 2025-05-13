@@ -167,11 +167,6 @@ class Doctor : public Person {
     }
 };
 
-
-// null objects
-Doctor nullDoctor(-1, "_null", -1, '_', "null");
-Patient nullPatient(-1, "_null", -1, '_');
-
 //functions
 
 std::vector<int> vecDate(std::string sched){
