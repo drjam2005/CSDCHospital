@@ -84,7 +84,7 @@ class MainWindow {
 	    
 	    cout << "\n\tFormat (hourStart hourEnd)\n\t       (ex: 10 15 ) [10am -> 3pm]\n\tHours: ";
 	    cin >> hs >> he;
-	    string fulldate = yyyy + mm + dd + (char)0x1F + to_string(hs) + ',' + to_string(he);
+	    string fulldate = yyyy + mm + dd + ':' + to_string(hs) + ',' + to_string(he);
 	    Hospital.hospitalSetDoctorSchedule(id, fulldate);
 
 	}
@@ -118,7 +118,9 @@ class MainWindow {
 	    int chosenSched;
 	    cout << "\nChoose a schedule from the doctor: ";
 	    cin >> chosenSched;
-
+	    
+	    string schedule = Hospital.hospitalGetSchedule(docID, chosenSched);
+	    cout << "\nSched: " << schedule << '\n';
 	    // Hospital.hospitalAddAppointment(patID, docID, chosenSched, chosenHour);
 	    return;
     }
@@ -129,7 +131,7 @@ class MainWindow {
 	return;
     }
 
-    void mwRecordCheckup(){
+    void mwCheckupRecord(){
 	return;
     }
 };
@@ -173,6 +175,9 @@ int main() {
 		break;
 	    case 7:
 		Window.mwPatientAppointmentsPrint();
+		break;
+	    case 8:
+		Window.mwCheckupRecord();
 		break;
 	}
     }

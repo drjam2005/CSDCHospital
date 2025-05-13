@@ -111,6 +111,7 @@ Patient nullPatient(-1, "_null", -1, '_');
 
 //functions
 const std::string months[12] = {"January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+
 std::string parseDate(int date){
     std::string fulldate = std::to_string(date);
     std::string year = fulldate.substr(0,4);
@@ -282,6 +283,20 @@ class HospitalManager{
 	    }
 	    return nullptr;
 	}
+	
+	std::string hospitalGetSchedule(int docID, int schedID){
+	    for(Doctor& doctor : doctors){
+		if(doctor.getID() == docID){
+		    std::string date = doctor.getSchedules()[schedID-1];
+		    std::stringstream ssDate(date);
+		    int id, datenum, hs, he;
+		    char chr;
+		    ssDate >> datenum >> chr >> hs >> chr >> he;
+		    return parseDate(std::stoi(date)) + " From: " + std::to_string(hs) + ":00 to " + std::to_string(he) + ":00";
+		}
+	    }
+	    return "NULL";
+	}
 
 	void hospitalPrintPatients(){
 	    for(Patient& patient : patients){
@@ -300,7 +315,7 @@ class HospitalManager{
 		if(doctor.getID() == id){
 		    if(doctor.getSchedules().size() == 0)
 			continue;
-		    int i = 0;
+		    int i = 1;
 		    for(std::string sched : doctor.getSchedules()){
 			int date, hs, he;
 			char chr;
