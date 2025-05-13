@@ -145,13 +145,33 @@ class MainWindow {
 	return;
     }
 
-    void mwCheckupRecord(){
+    void mwRecordCheckup(){
+	int appID;
+	cout << "Appointment ID: ";
+	cin >> appID;
+	Appointment* chosenApp = Hospital.hospitalGetAppointment(appID);
+	if(chosenApp == nullptr){
+	    cout << "Appointment with this ID doesn't exist!!\n";
+	    return;
+	}
+
+	string symptoms, treatments;
+	cout << "Doctor: " << Hospital.hospitalGetDoctor(chosenApp->getDocID())->getName() << '\n';
+	cout << "Patient: " << Hospital.hospitalGetPatient(chosenApp->getPatID())->getName() << '\n';
+	cout << "-------------\n";
+	cout << "Symptoms: ";
+	cin.ignore();
+	getline(cin, symptoms);
+	cout << "Treatments: ";
+	getline(cin, treatments);
+
+	Hospital.hospitalRecordCheckup(appID, symptoms, treatments);
 	return;
     }
 };
 
 int main() {
-    HospitalManager MainHospital("db/patientSave.txt", "db/doctorSave.txt", "db/schedulesSave.txt", "db/appointmentsSave.txt");
+    HospitalManager MainHospital("db/patientSave.txt", "db/doctorSave.txt", "db/schedulesSave.txt", "db/appointmentsSave.txt", "db/recordsSave.txt");
     MainWindow Window(MainHospital);
     while (true) {
 	int input;
@@ -193,7 +213,7 @@ int main() {
 		Window.mwPatientAppointmentsPrint();
 		break;
 	    case 8:
-		Window.mwCheckupRecord();
+		Window.mwRecordCheckup();
 		break;
 	}
     }

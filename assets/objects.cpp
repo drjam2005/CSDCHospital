@@ -90,6 +90,32 @@ struct Appointment{
 	}
 };
 
+class Checkup{
+    private:
+	int recordID;
+	int appID;
+	std::string symptoms;
+	std::string treatments;
+    public:
+	Checkup(int givenRecordID, int givenAppID, std::string givenSymptoms, std::string givenTreatments) : recordID(givenRecordID), appID(givenAppID), symptoms(givenSymptoms), treatments(givenTreatments) {}
+	
+	int getRecordID(){
+	    return recordID;
+	}
+
+	int getAppID(){
+	    return appID;
+	}
+
+	std::string getSymptoms(){
+	    return symptoms;
+	}
+
+	std::string getTreatments(){
+	    return treatments;
+	}
+};
+
 
 class Patient : public Person {
     private:
@@ -164,16 +190,19 @@ class HospitalManager{
 	std::vector<Doctor> doctors;
 	std::vector<std::string> schedules;
 	std::vector<Appointment> appointments;
+	std::vector<Checkup> checkups;
 	std::string patientSaveName;
 	std::string doctorSaveName;
 	std::string scheduleSaveName;
 	std::string appointmentSaveName;
+	std::string checkupSaveName;
     public:
-	HospitalManager(std::string givenPatientSaveName, std::string givenDoctorSaveName, std::string givenScheduleSaveName, std::string givenAppointmentSaveName) : patientSaveName(givenPatientSaveName), doctorSaveName(givenDoctorSaveName), scheduleSaveName(givenScheduleSaveName), appointmentSaveName(givenAppointmentSaveName) {
+	HospitalManager(std::string givenPatientSaveName, std::string givenDoctorSaveName, std::string givenScheduleSaveName, std::string givenAppointmentSaveName, std::string givenCheckupSaveName) : patientSaveName(givenPatientSaveName), doctorSaveName(givenDoctorSaveName), scheduleSaveName(givenScheduleSaveName), appointmentSaveName(givenAppointmentSaveName), checkupSaveName(givenCheckupSaveName) {
 	    hospitalLoadPatients();
 	    hospitalLoadDoctors();
 	    hospitalLoadSchedules();
 	    hospitalLoadAppointments();
+	    hospitalLoadCheckups();
 	}
 	
 	// Saving
@@ -221,6 +250,14 @@ class HospitalManager{
 		appFile << app.getID() << ',' << app.getPatID() << ',' << app.getDocID() << ',' << app.getSched() << ';' << app.getHour() << '\n';
 	    }
 	    appFile.close();
+	}
+
+	void hospitalSaveCheckups(){
+	    std::ofstream checkFile(checkupSaveName);
+	    for(Checkup& checkup : checkups){
+		checkFile << checkup.getRecordID() << ',' << checkup.getAppID() << ',' << checkup.getSymptoms() << (char)0x1F << checkup.getTreatments() << '\n';
+	    }
+	    checkFile.close();
 	}
 
 	// Loading
@@ -300,6 +337,26 @@ class HospitalManager{
 	    appFile.close();
 	    return;
 	}
+
+	void hospitalLoadCheckups(){
+	    checkups.clear();
+	    std::ifstream checkFile(checkupSaveName);
+	    std::string line;
+	    while(std::getline(checkFile, line)){
+		std::stringstream ss(line);
+		int recordID, appID;
+		std::string symptoms, treatments;
+		char cma;
+
+		ss >> recordID >> cma >> appID >> cma;
+		std::getline(ss, symptoms, (char)0x1F);
+		ss >> treatments;
+
+		// hospitalRecordCheckup(appID, symptoms, treatments, true);
+	    }
+	    checkFile.close();
+	}
+
 	// Setters
 	void hospitalPatientAdd(std::string name, int age, char gender, bool isLoad=false){
 	    int id = patients.size();
@@ -344,6 +401,15 @@ class HospitalManager{
 	    return;
 	}
 
+	void hospitalRecordCheckup(int appID, std::string symptoms, std::string treatments, bool isLoad=false){
+	    int recordID = checkups.size();
+	    Checkup record(recordID, appID, symptoms, treatments);
+	    checkups.push_back(record);
+	    if(!isLoad){
+		hospitalSaveCheckups();
+	    }
+	}
+
 	// Getters
 	Patient* hospitalGetPatient(int id){
 	    for(Patient& patient : patients){
@@ -358,6 +424,15 @@ class HospitalManager{
 	    for(Doctor& doctor : doctors){
 		if(doctor.getID() == id)
 		    return &doctor;
+	    }
+	    return nullptr;
+	}
+
+	Appointment* hospitalGetAppointment(int appID){
+	    for(Appointment& app : appointments){
+		if(app.getID() == appID){
+		    return &app;
+		}
 	    }
 	    return nullptr;
 	}
@@ -416,4 +491,5 @@ class HospitalManager{
 		}
 	    }
 	}
+
 };
