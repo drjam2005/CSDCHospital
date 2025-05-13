@@ -126,13 +126,15 @@ class MainWindow {
 	    cout << "Choose hour (" << hours[1] << " -> " << hours[2] << "): ";
 	    int chosenHour;
 	    cin >> chosenHour;
-	    Hospital.hospitalSetAppointment(patID, docID, chosenSched, chosenHour);
+	    Hospital.hospitalSetAppointment(patID, docID, rawSched, chosenHour);
 	    return;
     }
 
     void mwPatientAppointmentsPrint(){
 	int patID;
 	cout << "Patient ID: ";
+	cin >> patID;
+	
 	return;
     }
 
@@ -156,7 +158,7 @@ int main() {
 	std::cout << "--------------------------- Records ---------------------------\n";
 	std::cout << "- (8) Record Checkup\n";
 	std::cout << "--------------------------- Removes ---------------------------\n";
-	std::cout << "- (9) idk";
+	std::cout << "- (9) idk\n";
 	std::cout << "---------------------------------------------------------------\n";
 	std::cout << "Input: ";
 	std::cin >> input;

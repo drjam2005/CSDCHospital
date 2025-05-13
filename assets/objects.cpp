@@ -58,8 +58,16 @@ struct Appointment{
 	    return;
 	}
 
-	void appointmentGet(){
-	    return;
+	std::string getSched(){
+	    return appSched;
+	}
+
+	int getID(){
+	    return appID;
+	}
+
+	int getHour(){
+	    return chosenHour;
 	}
 };
 
@@ -81,33 +89,31 @@ class Patient : public Person {
 };
 
 class Doctor : public Person {
-    // TODO
-	private:
-        	std::string specialization;
-        	std::vector<std::string> availableTimes;
-	public:
-	// constructor
-		Doctor(int givenID, std::string givenName, int givenAge, char givenSex, std::string givenSpecialization) : Person(givenID, givenName, givenAge, givenSex)
-	{
-	    specialization = givenSpecialization;
-	}
-	// setters...
-	void addSchedule(std::string fulldate) {
-	    availableTimes.push_back(fulldate);
-	}
+    private:
+	std::string specialization;
+	std::vector<std::string> availableTimes;
+    public:
+    // constructor
+    Doctor(int givenID, std::string givenName, int givenAge, char givenSex, std::string givenSpecialization) : Person(givenID, givenName, givenAge, givenSex) {
+	specialization = givenSpecialization;
+    }
+    // setters...
+    void addSchedule(std::string fulldate) {
+	availableTimes.push_back(fulldate);
+    }
 
-	void setSpecialization(std::string givenSpecialization) {
-	    specialization = givenSpecialization;
-	}
-	
-	//getters
-	std::string getSpecialization(){
-	    return specialization;
-	}
+    void setSpecialization(std::string givenSpecialization) {
+	specialization = givenSpecialization;
+    }
+    
+    //getters
+    std::string getSpecialization(){
+	return specialization;
+    }
 
-	std::vector<std::string> getSchedules(){
-	    return availableTimes;
-	}
+    std::vector<std::string> getSchedules(){
+	return availableTimes;
+    }
 };
 
 
@@ -197,7 +203,7 @@ class HospitalManager{
 	void hospitalSaveAppointments(){
 	    std::ofstream appFile(appointmentSaveName);
 	    for(Appointment& app : appointments){
-		//appFile << app << '\n';
+		appFile << app.getID() << ',' << app.getSched() << ',' << app.getHour() << '\n';
 	    }
 	    appFile.close();
 	}
@@ -270,6 +276,7 @@ class HospitalManager{
 
 		Appointment app(appID, patID, docID, sched, hour);
 		Patient* patient = hospitalGetPatient(patID);
+
 		patient->addAppointment(app);
 		hospitalSetAppointment(patID, docID, sched, hour);
 
