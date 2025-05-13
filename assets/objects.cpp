@@ -36,15 +36,47 @@ class Person{
 	}
 };
 
+struct Appointment{
+    private:
+	int appID;
+	int patID;
+	int docID;
+	int chosenHour;
+	std::string appSched;
+	bool isCancelled = false;
+    public:
+	Appointment(int givenAppID, int givenPatID, int givenDocID, std::string givenAppSched, int givenHour){
+	    appID = givenAppID;
+	    patID = givenPatID;
+	    docID = givenDocID;
+	    appSched = givenAppSched;
+	    chosenHour = givenHour;
+	}
+
+	void appointmentCancel(){
+	    isCancelled = true;
+	    return;
+	}
+
+	void appointmentGet(){
+	    return;
+	}
+};
+
+
 class Patient : public Person {
     private:
 	//// IDK
 	// std::vector<std::string> symptoms;
-	// std::vector<Appointment> appointments;
+	std::vector<Appointment> appointments;
     public:
 	Patient(int givenID, std::string givenName, int givenAge, char givenGender) : Person(givenID, givenName, givenAge, givenGender){}
 	void patientPrintInfo(){
 	    std::cout << "Name: " << Person::getName() << ", Age: " << Person::getAge() << ", Sex: " << Person::getSex();
+	}
+
+	void addAppointment(Appointment app){
+	    appointments.push_back(app);
 	}
 };
 
@@ -63,10 +95,11 @@ class Doctor : public Person {
 	void addSchedule(std::string fulldate) {
 	    availableTimes.push_back(fulldate);
 	}
+
 	void setSpecialization(std::string givenSpecialization) {
 	    specialization = givenSpecialization;
 	}
-
+	
 	//getters
 	std::string getSpecialization(){
 	    return specialization;
@@ -78,33 +111,6 @@ class Doctor : public Person {
 };
 
 
-// structs
-struct Appointment{
-    private:
-	int appID;
-	int patID;
-	int docID;
-	std::string appSched;
-	int hour;
-	bool isCancelled = false;
-    public:
-	Appointment(int givenAppID, int givenPatID, int givenDocID, std::string givenAppSched, int givenHour){
-	    appID = givenAppID;
-	    patID = givenPatID;
-	    docID = givenDocID;
-	    appSched = givenAppSched;
-	    hour = givenHour;
-	}
-
-	void appointmentCancel(){
-	    isCancelled = true;
-	    return;
-	}
-
-	void appointmentGet(){
-	    return;
-	}
-};
 // null objects
 Doctor nullDoctor(-1, "_null", -1, '_', "null");
 Patient nullPatient(-1, "_null", -1, '_');
@@ -136,7 +142,7 @@ class HospitalManager{
 	std::vector<Patient> patients;
 	std::vector<Doctor> doctors;
 	std::vector<std::string> schedules;
-	std::vector<std::string> appointments;
+	std::vector<Appointment> appointments;
 	std::string patientSaveName;
 	std::string doctorSaveName;
 	std::string scheduleSaveName;
@@ -190,11 +196,12 @@ class HospitalManager{
 	
 	void hospitalSaveAppointments(){
 	    std::ofstream appFile(appointmentSaveName);
-	    for(std::string& app : appointments){
-		std::cout << app << " ";
+	    for(Appointment& app : appointments){
+		//appFile << app << '\n';
 	    }
 	    appFile.close();
 	}
+
 	// Loading
 	void hospitalLoadPatients(){
 	    patients.clear();
@@ -226,8 +233,7 @@ class HospitalManager{
 
 		ss >> id >> cma;
 		std::getline(ss, name, (char)0x1F);
-		ss >> cma >> age >> cma >> sex;
-		std::getline(ss, specialization, (char)0x1F);
+		ss >> cma >> age >> cma >> sex >> cma >> specialization;
 		hospitalDoctorAdd(name, age, sex, specialization, true);
 	    }
 	    return;
@@ -247,6 +253,28 @@ class HospitalManager{
 		hospitalSetDoctorSchedule(docID,  fulldate, true);
 	    }
 	    schedFile.close();
+	}
+	
+	void hospitalLoadAppointments(){
+	    appointments.clear();
+	    std::ifstream appFile(appointmentSaveName);
+	    std::string line;
+	    while(std::getline(appFile, line)){
+		int appID, patID, docID, hour;
+		std::string sched;
+		char chr;
+		std::stringstream ss(line);
+		ss >> appID >> chr >> patID >> chr >> docID;
+		std::getline(ss, sched, ';');
+		ss >> hour;
+
+		Appointment app(appID, patID, docID, sched, hour);
+		Patient* patient = hospitalGetPatient(patID);
+		patient->addAppointment(app);
+		hospitalSetAppointment(patID, docID, sched, hour);
+
+	    }
+	    return;
 	}
 	// Setters
 	void hospitalPatientAdd(std::string name, int age, char gender, bool isLoad=false){
@@ -281,20 +309,17 @@ class HospitalManager{
 	    }
 	}
 
-	void hospitalSetAppointment(int patID, int docID, int chosenSched, int chosenHour){
+	void hospitalSetAppointment(int patID, int docID, std::string chosenSched, int chosenHour, bool isLoad=false){
 	    // Patient shit...
 	    
-	    for(Doctor& doctor : doctors){
-		if(doctor.getID() == docID){
-		    std::string sched = doctor.getSchedules()[chosenSched-1];
-		    int schedID = schedules.size();
-		    std::string fullSched = std::to_string(schedID) + ',' + std::to_string(patID) + ',' + std::to_string(docID) + ',' + sched + ',' + std::to_string(chosenHour);
-		    schedules.push_back(fullSched);
-		}
+	    int appID = appointments.size();
+	    Appointment app(appID, patID, docID, chosenSched, chosenHour);
+	    appointments.push_back(app);
+	    if(!isLoad){
+		hospitalSaveAppointments();
 	    }
 	    return;
 	}
-
 
 	// Getters
 	Patient* hospitalGetPatient(int id){
@@ -323,6 +348,15 @@ class HospitalManager{
 		    char chr;
 		    ssDate >> datenum >> chr >> hs >> chr >> he;
 		    return parseDate(std::stoi(date)) + " From: " + std::to_string(hs) + ":00 to " + std::to_string(he) + ":00";
+		}
+	    }
+	    return "NULL";
+	}
+
+	std::string hospitalGetRawSched(int docID, int chosenSched){
+	    for(Doctor& doctor : doctors){
+		if(doctor.getID() == docID){
+		    return doctor.getSchedules()[chosenSched-1];
 		}
 	    }
 	    return "NULL";
@@ -360,4 +394,3 @@ class HospitalManager{
 	    }
 	}
 };
-

@@ -120,9 +120,10 @@ class MainWindow {
 	    cin >> chosenSched;
 	    
 	    string schedule = Hospital.hospitalGetSchedule(docID, chosenSched);
-	    vector<int> sched = vecDate(doctor->getSchedules()[chosenSched-1]);
+	    string rawSched = Hospital.hospitalGetRawSched(docID, chosenSched);
+	    vector<int> hours = vecDate(doctor->getSchedules()[chosenSched-1]);
 	    cout << "\nSched: " << schedule << '\n';
-	    cout << "Choose hour (" << sched[1] << " -> " << sched[2] << "): ";
+	    cout << "Choose hour (" << hours[1] << " -> " << hours[2] << "): ";
 	    int chosenHour;
 	    cin >> chosenHour;
 	    Hospital.hospitalSetAppointment(patID, docID, chosenSched, chosenHour);
@@ -154,6 +155,8 @@ int main() {
 	std::cout << "- (7) Print Patient Appointments\n";
 	std::cout << "--------------------------- Records ---------------------------\n";
 	std::cout << "- (8) Record Checkup\n";
+	std::cout << "--------------------------- Removes ---------------------------\n";
+	std::cout << "- (9) idk";
 	std::cout << "---------------------------------------------------------------\n";
 	std::cout << "Input: ";
 	std::cin >> input;

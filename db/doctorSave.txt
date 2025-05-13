@@ -1,2 +1,1 @@
-0John20M
-1okay20M
+0John Doe20Mgoat
