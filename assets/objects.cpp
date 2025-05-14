@@ -5,8 +5,10 @@
 #include <vector>
 #include <fstream>
 
+// consts
 const std::string months[12] = {"January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
+// functions
 std::string parseDate(int date){
     std::string fulldate = std::to_string(date);
     std::string year = fulldate.substr(0,4);
@@ -503,14 +505,57 @@ class HospitalManager{
 			int date, hs, he;
 			char chr;
 			std::stringstream ss(sched);
-
+			bool isOccuppied = false;
+			std::vector<int> occupiedHours;
 			ss >> date >> chr >> hs >> chr >> he;
-			std::cout << '(' << i << "): " << parseDate(date) << " " << hs << ":00 to " << he << ":00\n";
+
+			// check occupied
+			for(Appointment& app : appointments){
+			    if(app.getDocID() == id){
+				std::string converted = (std::to_string(date) + ":" + std::to_string(hs) + "," + std::to_string(he));
+				std::string gottenSched = app.getSched();
+				isOccuppied = (gottenSched == converted);
+				occupiedHours.push_back(app.getHour());
+			    }
+			}
+			std::cout << '(' << i << "): " << parseDate(date) << " " << hs << ":00 to " << he << ":00";
+			if(isOccuppied){
+			    for(int hour : occupiedHours){
+				std::cout << "\n\t Hour Occupied: " << hour;
+			    }
+			}
+			std::cout << '\n';
 			i++;
 		    }
 		    return;
 		}
 	    }
+	}
+	    
+	std::vector<int> hospitalGetOccupiedHours(int docID, int schedID){
+	    Doctor* doctor = hospitalGetDoctor(docID);
+	    std::string schedule = doctor->getSchedules()[schedID];
+	    std::stringstream ss(schedule);
+	    int date, hs, he;
+	    char chr;
+	    ss >> date >> chr >> hs >> chr >> he;
+	    std::vector<int> occupiedHours;
+	    for(Appointment& app : appointments){
+		if(app.getDocID() == docID){
+		    std::string converted = (std::to_string(date) + ":" + std::to_string(hs) + "," + std::to_string(he));
+		    std::string gottenSched = app.getSched();
+		    occupiedHours.push_back(app.getHour());
+		}
+	    }
+	    return occupiedHours;
+	}
+
+	bool hospitalValidateAppointment(std::vector<int> occupiedHours, int chosenHour){
+	    for(int hour : occupiedHours){
+		if(hour == chosenHour)
+		    return false;
+	    }
+	    return true;
 	}
 
 

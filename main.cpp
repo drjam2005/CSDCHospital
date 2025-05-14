@@ -1,14 +1,15 @@
 #include <iostream>
 #include <limits>
+#include <cstdlib>
 #include <objects.cpp>
 using namespace std;
 
 class MainWindow {
     private:
 	HospitalManager Hospital;
-
+	std::string* logOut;
     public:
-	MainWindow(HospitalManager &hpt) : Hospital(hpt) {}
+	MainWindow(HospitalManager &hpt, std::string& log) : Hospital(hpt), logOut(&log){}
 
 	// Setters
 	void mwPatientAdd() {
@@ -26,6 +27,7 @@ class MainWindow {
 	    }
 	    cout << "Sex (M/F): ";
 	    cin >> sex;
+	    *logOut = "Log: Added Patient: " + name + "!\n";
 	    Hospital.hospitalPatientAdd(name, age, sex);
 	    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	}
@@ -53,9 +55,11 @@ class MainWindow {
 	    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	    getline(cin, specialization);
 	    Hospital.hospitalDoctorAdd(name, age, sex, specialization);
+	    *logOut = "Added Doctor: " + name + "!\n";
 	}
 	
 	void mwDoctorsPrint(){
+	    *logOut = "Doctors: \n";
 	    Hospital.hospitalPrintDoctors();
 	}
 
@@ -68,7 +72,7 @@ class MainWindow {
 	    Doctor* chosenDoctor = Hospital.hospitalGetDoctor(id);
 
 	    if(chosenDoctor == nullptr || chosenDoctor->getName() == "_null"){
-		cout << "Doctor with ID: " << id << " doesn't exist!\n";
+		*logOut = "Doctor with ID: " + to_string(id) + " doesn't exist!\n";
 		return;
 	    }
 
@@ -85,8 +89,8 @@ class MainWindow {
 	    cout << "\n\tFormat (hourStart hourEnd)\n\t       (ex: 10 15 ) [10am -> 3pm]\n\tHours: ";
 	    cin >> hs >> he;
 	    string fulldate = yyyy + mm + dd + ':' + to_string(hs) + ',' + to_string(he);
+	    *logOut = "Added schedule to "+ chosenDoctor->getName() + "\n";
 	    Hospital.hospitalSetDoctorSchedule(id, fulldate);
-
 	}
 
 	void mwSetAppointment(){
@@ -95,18 +99,18 @@ class MainWindow {
 	    cin >> patID;
 	    Patient* patient = Hospital.hospitalGetPatient(patID);
 	    if(patient == nullptr || patient->getName() == "_null"){
-		cout << "Patient with ID: " << patID << " doesn't exist!\n";
+		*logOut = "Patient with ID: " + to_string(patID) + " doesn't exist!\n";
 		return;
 	    }
 	    cout << "Doctor ID : ";
 	    cin >> docID;
 	    Doctor* doctor = Hospital.hospitalGetDoctor(docID);
 	    if(doctor == nullptr || doctor->getName() == "_null"){
-		cout << "Doctor with ID: " << docID << " doesn't exist!\n";
+		*logOut = "Doctor with ID: " + to_string(docID) + " doesn't exist!\n";
 		return;
 	    }
 	    if(doctor->getSchedules().size() <= 0){
-		cout << "Doctor " << doctor->getName() << " doesn't have any schedules yet!\n";
+		*logOut = "Doctor " + doctor->getName() + " doesn't have any schedules yet!\n";
 		return;
 	    }
 
@@ -114,11 +118,14 @@ class MainWindow {
 	    cout << "\nDoctor: " << doctor->getName() << ", Specialization: " << doctor->getSpecialization();
 	    cout << "\nDoctor " << doctor->getName() << "'s Schedules:\n";
 	    Hospital.hospitalPrintDoctorSchedules(docID);
-	    
+	    int numberOfScheds = doctor->getSchedules().size();
 	    int chosenSched;
 	    cout << "\nChoose a schedule from the doctor: ";
 	    cin >> chosenSched;
-	    
+	    if(chosenSched < 1 || chosenSched > numberOfScheds){
+		*logOut = "Invalid Schedule Number!\n";
+		return;
+	    }
 	    string schedule = Hospital.hospitalGetSchedule(docID, chosenSched);
 	    string rawSched = Hospital.hospitalGetRawSched(docID, chosenSched);
 	    vector<int> hours = vecDate(doctor->getSchedules()[chosenSched-1]);
@@ -126,6 +133,19 @@ class MainWindow {
 	    cout << "Choose hour (" << hours[1] << " -> " << hours[2] << "): ";
 	    int chosenHour;
 	    cin >> chosenHour;
+	    if(chosenHour > hours[2] || chosenHour < hours[1]){
+		*logOut = "Invalid hour!\n";
+		return;
+	    }
+	    // validate
+	    vector<int> occupiedHours = Hospital.hospitalGetOccupiedHours(docID, chosenSched);
+	    bool isValid = Hospital.hospitalValidateAppointment(occupiedHours, chosenHour);
+	    if(!isValid){
+		*logOut = "This hour has been taken!\n";
+		return;
+	    }
+
+	    *logOut = "Set Appointment of " + patient->getName() + " to " + doctor->getName() + "!\n";
 	    Hospital.hospitalSetAppointment(patID, docID, rawSched, chosenHour);
 	    return;
     }
@@ -137,10 +157,12 @@ class MainWindow {
 	
 	Patient* patient = Hospital.hospitalGetPatient(patID);
 	if(patient == nullptr){
-	    cout << "Patient with this ID doesn't exist!!\n";
+	    *logOut = "Patient with this ID doesn't exist!!\n";
 	    return;
 	}
 
+	system("clear");
+	cout << "Patient " << patient->getName() << "'s Appointments: \n";
 	patient->printAppointments();
 	return;
     }
@@ -151,7 +173,7 @@ class MainWindow {
 	cin >> appID;
 	Appointment* chosenApp = Hospital.hospitalGetAppointment(appID);
 	if(chosenApp == nullptr){
-	    cout << "Appointment with this ID doesn't exist!!\n";
+	    *logOut = "Appointment with this ID doesn't exist!!\n";
 	    return;
 	}
 
@@ -207,7 +229,8 @@ class MainWindow {
 
 int main() {
     HospitalManager MainHospital("db/patientSave.txt", "db/doctorSave.txt", "db/schedulesSave.txt", "db/appointmentsSave.txt", "db/recordsSave.txt");
-    MainWindow Window(MainHospital);
+    std::string log;
+    MainWindow Window(MainHospital, log);
     while (true) {
 	int input;
 	std::cout << "---------------------------   Add   ---------------------------\n";
@@ -223,44 +246,57 @@ int main() {
 	std::cout << "- (9) Remove Patient               (10) Remove Doctor         -\n";
 	std::cout << "---------------------------------------------------------------\n";
 	std::cout << "  (11) Exit\n-----------------\n";
+	std::cout << log;
 	std::cout << "Input: ";
 	std::cin >> input;
 	std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	switch (input) {
 	    case 1:
 		Window.mwPatientAdd();
+		system("clear");
 		break;
 	    case 2:
 		Window.mwDoctorAdd();
+		system("clear");
 		break;
 	    case 3:
 		Window.mwSetDoctorSchedule();
+		system("clear");
 		break;
 	    case 4:
 		Window.mwSetAppointment();
+		system("clear");
 		break;
 	    case 5:
 		Window.mwPatientsPrint();
 		break;
 	    case 6:
 		Window.mwDoctorsPrint();
+		system("clear");
 		break;
 	    case 7:
 		Window.mwPatientAppointmentsPrint();
 		break;
 	    case 8:
 		Window.mwRecordCheckup();
+		system("clear");
 		break;
 	    case 9:
 		Window.mwRemovePatient();
+		system("clear");
 		break;
 	    case 10:
 		Window.mwRemoveDoctor();
+		system("clear");
 		break;
 	    case 11:
+		system("clear");
+		cout << "\nExiting...";
 		return 0;
 		break;
 	    default:
+		system("clear");
+		cout << "Couldn't recognize command!";
 		break;
 	}
     }
