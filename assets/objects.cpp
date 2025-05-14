@@ -245,7 +245,7 @@ class HospitalManager{
 	void hospitalSaveSchedules(){
 	    std::ofstream schedFile(scheduleSaveName);
 	    for(Doctor& doctor : doctors){
-		if(doctor.getSchedules().size() <= 0)
+		if(doctor.getSchedules().size() <= 0 || doctor.getID() == -1)
 		    continue;
 		for(std::string sched : doctor.getSchedules()){
 		    schedFile << doctor.getID() << (char)0x1F << sched << '\n';
@@ -541,11 +541,52 @@ class HospitalManager{
 	    hospitalSavePatients();
 	    hospitalSaveAppointments();
 	    hospitalSaveCheckups();
+	    hospitalLoadPatients();
+	    hospitalLoadAppointments();
+	    hospitalLoadCheckups();
 	    return;
 	}
 
 	void hospitalRemoveDoctor(int docID){
-	    
+	    Doctor* doctor = hospitalGetDoctor(docID);
+	    if(doctor == nullptr){
+		std::cout << "\nDoctor with this ID doesn't exist!\n";
+		return;
+	    }
+	    doctor->setID(-1);
+
+	    // Remove Appointments, Checkups, Schedules
+	    for(std::string sched : schedules){
+		std::stringstream ss(sched);
+		int dID;
+		ss >> dID;
+		if(dID == docID){
+		    sched = "-1,000000000";
+		}
+	    }
+
+	    for(Appointment& app : appointments){
+		if(app.getDocID() == docID){
+		    app.appointmentCancel();
+
+		    for(Checkup& checkup : checkups){
+			if(checkup.getAppID() == app.getID()){
+			    checkup.removeCheckup();
+			    break;
+			}
+		    }
+		}
+	    }
+
+	    hospitalSaveDoctors();
+	    hospitalSaveCheckups();
+	    hospitalSaveAppointments();
+	    hospitalSaveSchedules();
+	    hospitalLoadSchedules();
+	    hospitalLoadCheckups();
+	    hospitalLoadAppointments();
+	    hospitalLoadDoctors();
+	    return;
 	}
 
 };

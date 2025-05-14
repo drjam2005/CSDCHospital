@@ -258,6 +258,7 @@ int main() {
 		Window.mwRemoveDoctor();
 		break;
 	    case 11:
+		return 0;
 		break;
 	    default:
 		break;
