@@ -272,7 +272,6 @@ int main() {
 		break;
 	    case 6:
 		Window.mwDoctorsPrint();
-		system("clear");
 		break;
 	    case 7:
 		Window.mwPatientAppointmentsPrint();
@@ -291,13 +290,12 @@ int main() {
 		break;
 	    case 11:
 		system("clear");
-		cout << "\nExiting...";
+		cout << "Exiting...\n";
 		return 0;
-		break;
 	    default:
-		system("clear");
-		cout << "Couldn't recognize command!";
-		break;
+	    	system("clear");
+		cout << "Couldn't Recognize command! Exiting...\n";
+		return 0;
 	}
     }
 }
