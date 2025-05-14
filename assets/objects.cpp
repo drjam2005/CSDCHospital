@@ -1,3 +1,4 @@
+#include <bits/stdc++.h>
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -45,6 +46,10 @@ class Person{
 	char getSex(){
 	    return sex;
 	}
+
+	void setID(int id){
+	    ID = id;
+	}
 };
 
 struct Appointment{
@@ -71,6 +76,10 @@ struct Appointment{
 
 	std::string getSched(){
 	    return appSched;
+	}
+	
+	bool checkCancelled(){
+	    return isCancelled;
 	}
 
 	int getID(){
@@ -113,6 +122,11 @@ class Checkup{
 
 	std::string getTreatments(){
 	    return treatments;
+	}
+
+	void removeCheckup(){
+	    recordID = -1;
+	    return;
 	}
 };
 
@@ -204,6 +218,8 @@ class HospitalManager{
 	void hospitalSavePatients(){
 	    std::ofstream patFile(patientSaveName);
 	    for(Patient& patient : patients){
+		if(patient.getID() == -1)
+		    continue;
 		patFile << patient.getID() << (char)0x1F
 			<< patient.getName() << (char)0x1F
 			<< patient.getAge() << (char)0x1F
@@ -242,6 +258,9 @@ class HospitalManager{
 	void hospitalSaveAppointments(){
 	    std::ofstream appFile(appointmentSaveName);
 	    for(Appointment& app : appointments){
+		if(app.checkCancelled() == true){
+		    continue;
+		}
 		appFile << app.getID() << ',' << app.getPatID() << ',' << app.getDocID() << ',' << app.getSched() << ';' << app.getHour() << '\n';
 	    }
 	    appFile.close();
@@ -250,6 +269,9 @@ class HospitalManager{
 	void hospitalSaveCheckups(){
 	    std::ofstream checkFile(checkupSaveName);
 	    for(Checkup& checkup : checkups){
+		if(checkup.getAppID() == -1){
+		    continue;
+		}
 		checkFile << checkup.getRecordID() << ',' << checkup.getAppID() << ',' << checkup.getSymptoms() << (char)0x1F << checkup.getTreatments() << '\n';
 	    }
 	    checkFile.close();
@@ -457,13 +479,17 @@ class HospitalManager{
 
 	void hospitalPrintPatients(){
 	    for(Patient& patient : patients){
-		    std::cout << '(' << patient.getID() << ')' << patient.getName() << ", " << patient.getSex() << '\n';
+		if(patient.getID() == -1)
+		    continue;
+		std::cout << '(' << patient.getID() << ')' << patient.getName() << ", " << patient.getSex() << '\n';
 	    }
 	}
 
 	void hospitalPrintDoctors(){
 	    for(Doctor& doctor : doctors){
-		    std::cout << '(' << doctor.getID() << ')' << doctor.getName() << ", " << doctor.getSex() << ", " << doctor.getSpecialization() << '\n';
+		if(doctor.getID() == -1)
+		    continue;
+		std::cout << '(' << doctor.getID() << ')' << doctor.getName() << ", " << doctor.getSex() << ", " << doctor.getSpecialization() << '\n';
 	    }
 	}
 
@@ -485,6 +511,41 @@ class HospitalManager{
 		    return;
 		}
 	    }
+	}
+
+
+	// Removing...
+	void hospitalRemovePatient(int patID){
+	    // Removing patient
+	    Patient* patient = hospitalGetPatient(patID);
+	    if(patient == nullptr){
+		std::cout << "\nPatient with this ID doesn't exist!\n";
+		return;
+	    }
+	    patient->setID(-1);
+	    // Removing Appointments and Checkups with patID
+	    for(Appointment& app : appointments){
+		if(app.getPatID() == patID){
+		    // cancelling appointments
+		    app.appointmentCancel();
+		    // removing checkups
+		    for(Checkup& checkup : checkups){
+			if(checkup.getAppID() == app.getID()){
+			    checkup.removeCheckup();
+			    break;
+			}
+		    }
+		}
+	    }
+
+	    hospitalSavePatients();
+	    hospitalSaveAppointments();
+	    hospitalSaveCheckups();
+	    return;
+	}
+
+	void hospitalRemoveDoctor(int docID){
+	    
 	}
 
 };

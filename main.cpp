@@ -168,6 +168,41 @@ class MainWindow {
 	Hospital.hospitalRecordCheckup(appID, symptoms, treatments);
 	return;
     }
+
+    // Removing shit
+    void mwRemovePatient(){
+	int patID;
+	cout << "Patient ID: ";
+	cin >> patID;
+	
+	Patient* chosenPatient = Hospital.hospitalGetPatient(patID);
+	cout << "Patient Name: " << chosenPatient->getName() << '\n';
+	cout << "Are you sure you want to remove " << chosenPatient->getName() << "?\n";
+	cout << "Choice (y/n): ";
+	char choice;
+	cin >> choice;
+	if(tolower(choice) == 'y'){
+	    Hospital.hospitalRemovePatient(patID);
+	}
+	return;
+    }
+
+    void mwRemoveDoctor(){
+	int docID;
+	cout << "Doctor ID: ";
+	cin >> docID;
+
+	Doctor* chosenDoctor = Hospital.hospitalGetDoctor(docID);
+	cout << "Doctor Name: " << chosenDoctor->getName() << '\n';
+	cout << "Are you sure you want to remove " << chosenDoctor->getName() << "?\n";
+	cout << "Choice (y/n): ";
+	char choice;
+	cin >> choice;
+	if(tolower(choice) == 'y'){
+	    Hospital.hospitalRemoveDoctor(docID);
+	}
+	return;
+    }
 };
 
 int main() {
@@ -176,17 +211,18 @@ int main() {
     while (true) {
 	int input;
 	std::cout << "---------------------------   Add   ---------------------------\n";
-	std::cout << "- (1) Add Patient                  (2) Add Doctor\n";
+	std::cout << "- (1) Add Patient                  (2) Add Doctor             -\n";
 	std::cout << "---------------------------   Set   ---------------------------\n";
-	std::cout << "- (3) Set Doctor Schedule          (4) Set Appointment\n";
+	std::cout << "- (3) Set Doctor Schedule          (4) Set Appointment        -\n";
 	std::cout << "---------------------------  Print  ---------------------------\n";
-	std::cout << "- (5) Print Patients               (6) Print Doctors\n";
-	std::cout << "- (7) Print Patient Appointments\n";
+	std::cout << "- (5) Print Patients               (6) Print Doctors          -\n";
+	std::cout << "- (7) Print Patient Appointments                              -\n";
 	std::cout << "--------------------------- Records ---------------------------\n";
-	std::cout << "- (8) Record Checkup\n";
+	std::cout << "- (8) Record Checkup                                          -\n";
 	std::cout << "--------------------------- Removes ---------------------------\n";
-	std::cout << "- (9) idk\n";
+	std::cout << "- (9) Remove Patient               (10) Remove Doctor         -\n";
 	std::cout << "---------------------------------------------------------------\n";
+	std::cout << "  (11) Exit\n-----------------\n";
 	std::cout << "Input: ";
 	std::cin >> input;
 	std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -214,6 +250,16 @@ int main() {
 		break;
 	    case 8:
 		Window.mwRecordCheckup();
+		break;
+	    case 9:
+		Window.mwRemovePatient();
+		break;
+	    case 10:
+		Window.mwRemoveDoctor();
+		break;
+	    case 11:
+		break;
+	    default:
 		break;
 	}
     }
