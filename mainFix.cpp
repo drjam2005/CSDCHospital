@@ -21,9 +21,9 @@ class MainWindow {
 	    getline(cin, name);
 	    cout << "Age: ";
 	    while (!(cin >> age)) {
-		cout << "Please enter a valid age!";
-		cin.clear();
-		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			cout << "Please enter a valid age!";
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	    }
 	    cout << "Sex (M/F): ";
 	    cin >> sex;
@@ -65,35 +65,25 @@ class MainWindow {
 	void mwSetDoctorSchedule(){
 	    int id, hs, he;
 	    string dd, mm, yyyy;
-	    Doctor* chosenDoctor;
-	    while (true){
-		cout << "Doctor ID: ";
-		cin >> id;
-		chosenDoctor = Hospital.hospitalGetDoctor(id);
 
-		if(chosenDoctor == nullptr || chosenDoctor->getName() == "_null"){
-		    cout << "Doctor with ID: " + to_string(id) + " doesn't exist!\n";
-		}else{
-		    break;
-		}
+	    cout << "Doctor ID: ";
+	    cin >> id;
+	    Doctor* chosenDoctor = Hospital.hospitalGetDoctor(id);
+
+	    if(chosenDoctor == nullptr || chosenDoctor->getName() == "_null"){
+		*logOut = "Doctor with ID: " + to_string(id) + " doesn't exist!\n";
+		return;
 	    }
 
 	    cout << "\n  Chosen Doctor: " << chosenDoctor->getName() << '\n';
-	    while(true){
-		cout << "  Schedule to add:\n\tFormat (DD MM YYYY)\n\tDate: ";
-		cin >> dd >> mm >> yyyy;
-		if(stoi(dd) < 1 || 31 < stoi(dd) || stoi(mm) < 1 || 12 < stoi(mm)){
-		    cout << "Invalid date, please enter again!\n";
-		}else{
-		    break;
-		}
-	    }
+	    cout << "  Schedule to add:\n\tFormat (DD MM YYYY)\n\tDate: ";
+	    cin >> dd >> mm >> yyyy;
 	    
 	    // parsing date
 	    if(stoi(dd) < 10)
-		dd = "0" + dd;
+			dd = "0" + dd;
 	    if(stoi(mm) < 10)
-		mm = "0" + mm;
+			mm = "0" + mm;
 	    
 	    cout << "\n\tFormat (hourStart hourEnd)\n\t       (ex: 10 15 ) [10am -> 3pm]\n\tHours: ";
 	    cin >> hs >> he;
@@ -107,17 +97,11 @@ class MainWindow {
 	    cout << "Patient ID: ";
 	    cin >> patID;
 	    Patient* patient = Hospital.hospitalGetPatient(patID);
-	    if(patient == nullptr || patient->getName() == "_null"){
-		*logOut = "Patient with ID: " + to_string(patID) + " doesn't exist!\n";
-		return;
-	    }
+
 	    cout << "Doctor ID : ";
 	    cin >> docID;
 	    Doctor* doctor = Hospital.hospitalGetDoctor(docID);
-	    if(doctor == nullptr || doctor->getName() == "_null"){
-		*logOut = "Doctor with ID: " + to_string(docID) + " doesn't exist!\n";
-		return;
-	    }
+
 	    if(doctor->getSchedules().size() <= 0){
 		*logOut = "Doctor " + doctor->getName() + " doesn't have any schedules yet!\n";
 		return;
@@ -152,8 +136,8 @@ class MainWindow {
 	    bool isValid = Hospital.hospitalValidateAppointment(occupiedHours, chosenHour);
 
 	    if(!isValid){
-			*logOut = "This hour has been taken!\n";
-			return;
+		*logOut = "This hour has been taken!\n";
+		return;
 	    }
 
 	    *logOut = "Set Appointment of " + patient->getName() + " to " + doctor->getName() + "!\n";

@@ -1,0 +1,83 @@
+Problems:
+    PatientAdding:
+	cout << "\nFormat: (Name, Age, Sex)\n";
+	string name;
+	int age;
+	char sex;
+	cout << "Name: ";
+	getline(cin, name); // HAVE USER REPEAT INPUT IF NAME INCLUDES NUMBERS
+
+	cout << "Age: ";
+	while (!(cin >> age)) {
+	    cout << "Please enter a valid age!";
+	    cin.clear();
+	    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+	}
+
+	cout << "Sex (M/F): ";
+	cin >> sex;	   // HAVE USER REPEAT INPUT IF SEX IS NOT M/F
+
+
+
+    DoctorAdding:
+	cout << "\nFormat: (Name, Age, Sex, Specialization)\n";
+	string name, specialization;
+	int age;
+	char sex;
+	cout << "Name: ";
+	getline(cin, name);
+	cout << "Age: ";
+	while (!(cin >> age)) {
+	    cout << "Please enter a valid age!";
+	    cin.clear();
+	    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+	}
+	cout << "Sex (M/F): ";
+	cin >> sex;
+
+    SetSchedule:
+	int id, hs, he;
+	string dd, mm, yyyy;
+
+	cout << "Doctor ID: ";
+	cin >> id;
+	Doctor* chosenDoctor = Hospital.hospitalGetDoctor(id); // HAVE USER REPEAT THEMSELVES IF DOCTOR DOESN'T EXIST (hint: it returns nullptr not found)
+
+	cout << "\n  Chosen Doctor: " << chosenDoctor->getName() << '\n';
+	cout << "  Schedule to add:\n\tFormat (DD MM YYYY)\n\tDate: ";
+	cin >> dd >> mm >> yyyy;			       // VALIDATE DATE, MAKE SURE (1 <= MONTH <= 12) and (1 <= DAY <= 31/28)
+	
+	if(stoi(dd) < 10)
+	    dd = "0" + dd;
+	if(stoi(mm) < 10)
+	    mm = "0" + mm;
+	
+	cout << "\n\tFormat (hourStart hourEnd)\n\t       (ex: 10 15 ) [10am -> 3pm]\n\tHours: ";
+	cin >> hs >> he;
+
+    SetAppointment:
+
+	int patID, docID;
+	cout << "Patient ID: ";
+	cin >> patID;
+	Patient* patient = Hospital.hospitalGetPatient(patID);
+
+	cout << "Doctor ID : ";
+	cin >> docID;
+	Doctor* doctor = Hospital.hospitalGetDoctor(docID); // MAKE USER REPEAT THEMSELVES IF DOCTOR DOESN'T EXIST (hint: returns nullptr if not found)
+
+	int schedsSize = doctor->getSchedules().size(); // RETURN VOID IF DOCTOR DOESN'T HAVE ANY SCHEDULE
+
+
+	cout << "\nPatient: " << patient->getName();
+	cout << "\nDoctor: " << doctor->getName() << ", Specialization: " << doctor->getSpecialization();
+	cout << "\nDoctor " << doctor->getName() << "'s Schedules:\n";
+	Hospital.hospitalPrintDoctorSchedules(docID);
+	int numberOfScheds =  schedsSize;
+	int chosenSched;
+	cout << "\nChoose a schedule from the doctor: ";
+	cin >> chosenSched;
+	if(chosenSched < 1 || chosenSched > numberOfScheds){
+	    *logOut = "Invalid Schedule Number!\n";
+	    return;
+	}
