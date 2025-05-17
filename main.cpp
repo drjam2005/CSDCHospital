@@ -2,6 +2,12 @@
 #include <limits>
 #include <cstdlib>
 #include <objects.cpp>
+#ifdef _WIN32
+    void clear() {system("cls");}
+#else
+    void clear() {system("clear");}
+#endif
+//clear();
 using namespace std;
 
 class MainWindow {
@@ -35,7 +41,7 @@ class MainWindow {
 	void mwPatientsPrint(){
 	    Hospital.hospitalPrintPatients();
 	}
-    
+
 	void mwDoctorAdd(){
 	    cout << "\nFormat: (Name, Age, Sex, Specialization)\n";
 	    string name, specialization;
@@ -47,7 +53,7 @@ class MainWindow {
 	    while (!(cin >> age)) {
 		cout << "Please enter a valid age!";
 		cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	    }
 	    cout << "Sex (M/F): ";
 	    cin >> sex;
@@ -57,7 +63,7 @@ class MainWindow {
 	    Hospital.hospitalDoctorAdd(name, age, sex, specialization);
 	    *logOut = "Added Doctor: " + name + "!\n";
 	}
-	
+
 	void mwDoctorsPrint(){
 	    Hospital.hospitalPrintDoctors();
 	}
@@ -88,13 +94,13 @@ class MainWindow {
 		    break;
 		}
 	    }
-	    
+
 	    // parsing date
 	    if(stoi(dd) < 10)
 		dd = "0" + dd;
 	    if(stoi(mm) < 10)
 		mm = "0" + mm;
-	    
+
 	    cout << "\n\tFormat (hourStart hourEnd)\n\t       (ex: 10 15 ) [10am -> 3pm]\n\tHours: ";
 	    cin >> hs >> he;
 	    string fulldate = yyyy + mm + dd + ':' + to_string(hs) + ',' + to_string(he);
@@ -152,90 +158,91 @@ class MainWindow {
 	    bool isValid = Hospital.hospitalValidateAppointment(occupiedHours, chosenHour);
 
 	    if(!isValid){
-			*logOut = "This hour has been taken!\n";
-			return;
+		*logOut = "This hour has been taken!\n";
+		return;
 	    }
 
 	    *logOut = "Set Appointment of " + patient->getName() + " to " + doctor->getName() + "!\n";
 	    Hospital.hospitalSetAppointment(patID, docID, rawSched, chosenHour);
 	    return;
-    }
+	}
 
-    void mwPatientAppointmentsPrint(){
-	int patID;
-	cout << "Patient ID: ";
-	cin >> patID;
-	
-	Patient* patient = Hospital.hospitalGetPatient(patID);
-	if(patient == nullptr){
-	    *logOut = "Patient with this ID doesn't exist!!\n";
+	void mwPatientAppointmentsPrint(){
+	    int patID;
+	    cout << "Patient ID: ";
+	    cin >> patID;
+
+	    Patient* patient = Hospital.hospitalGetPatient(patID);
+	    if(patient == nullptr){
+		*logOut = "Patient with this ID doesn't exist!!\n";
+		return;
+	    }
+
+	    clear();
+	    cout << "Patient " << patient->getName() << "'s Appointments: \n";
+	    patient->printAppointments();
 	    return;
 	}
 
-	system("clear");
-	cout << "Patient " << patient->getName() << "'s Appointments: \n";
-	patient->printAppointments();
-	return;
-    }
+	void mwRecordCheckup(){
+	    int appID;
+	    cout << "Appointment ID: ";
+	    cin >> appID;
+	    Appointment* chosenApp = Hospital.hospitalGetAppointment(appID);
+	    if(chosenApp == nullptr){
+		*logOut = "Appointment with this ID doesn't exist!!\n";
+		return;
+	    }
 
-    void mwRecordCheckup(){
-	int appID;
-	cout << "Appointment ID: ";
-	cin >> appID;
-	Appointment* chosenApp = Hospital.hospitalGetAppointment(appID);
-	if(chosenApp == nullptr){
-	    *logOut = "Appointment with this ID doesn't exist!!\n";
+	    string symptoms, treatments;
+	    cout << "Doctor: " << Hospital.hospitalGetDoctor(chosenApp->getDocID())->getName() << '\n';
+	    cout << "Patient: " << Hospital.hospitalGetPatient(chosenApp->getPatID())->getName() << '\n';
+	    cout << "-------------\n";
+	    cout << "Symptoms: ";
+	    cin.ignore();
+	    getline(cin, symptoms);
+	    cout << "Treatments: ";
+	    getline(cin, treatments);
+
+	    Hospital.hospitalRecordCheckup(appID, symptoms, treatments);
 	    return;
 	}
 
-	string symptoms, treatments;
-	cout << "Doctor: " << Hospital.hospitalGetDoctor(chosenApp->getDocID())->getName() << '\n';
-	cout << "Patient: " << Hospital.hospitalGetPatient(chosenApp->getPatID())->getName() << '\n';
-	cout << "-------------\n";
-	cout << "Symptoms: ";
-	cin.ignore();
-	getline(cin, symptoms);
-	cout << "Treatments: ";
-	getline(cin, treatments);
+	// Removing shit
+	void mwRemovePatient(){
+	    int patID;
+	    cout << "Patient ID: ";
+	    cin >> patID;
 
-	Hospital.hospitalRecordCheckup(appID, symptoms, treatments);
-	return;
-    }
 
-    // Removing shit
-    void mwRemovePatient(){
-	int patID;
-	cout << "Patient ID: ";
-	cin >> patID;
-	
-	Patient* chosenPatient = Hospital.hospitalGetPatient(patID);
-	cout << "Patient Name: " << chosenPatient->getName() << '\n';
-	cout << "Are you sure you want to remove " << chosenPatient->getName() << "?\n";
-	cout << "Choice (y/n): ";
-	char choice;
-	cin >> choice;
-	if(tolower(choice) == 'y'){
-	    Hospital.hospitalRemovePatient(patID);
+	    Patient* chosenPatient = Hospital.hospitalGetPatient(patID);
+	    cout << "Patient Name: " << chosenPatient->getName() << '\n';
+	    cout << "Are you sure you want to remove " << chosenPatient->getName() << "?\n";
+	    cout << "Choice (y/n): ";
+	    char choice;
+	    cin >> choice;
+	    if(tolower(choice) == 'y'){
+		Hospital.hospitalRemovePatient(patID);
+	    }
+	    return;
 	}
-	return;
-    }
 
-    void mwRemoveDoctor(){
-	int docID;
-	cout << "Doctor ID: ";
-	cin >> docID;
+	void mwRemoveDoctor(){
+	    int docID;
+	    cout << "Doctor ID: ";
+	    cin >> docID;
 
-	Doctor* chosenDoctor = Hospital.hospitalGetDoctor(docID);
-	cout << "Doctor Name: " << chosenDoctor->getName() << '\n';
-	cout << "Are you sure you want to remove " << chosenDoctor->getName() << "?\n";
-	cout << "Choice (y/n): ";
-	char choice;
-	cin >> choice;
-	if(tolower(choice) == 'y'){
-	    Hospital.hospitalRemoveDoctor(docID);
+	    Doctor* chosenDoctor = Hospital.hospitalGetDoctor(docID);
+	    cout << "Doctor Name: " << chosenDoctor->getName() << '\n';
+	    cout << "Are you sure you want to remove " << chosenDoctor->getName() << "?\n";
+	    cout << "Choice (y/n): ";
+	    char choice;
+	    cin >> choice;
+	    if(tolower(choice) == 'y'){
+		Hospital.hospitalRemoveDoctor(docID);
+	    }
+	    return;
 	}
-	return;
-    }
 };
 
 int main() {
@@ -243,74 +250,74 @@ int main() {
     std::string log;
     MainWindow Window(MainHospital, log);
     while (true) {
-		int input;
-		std::cout << "\n";
-		std::cout << "--------------------\n";
-		std::cout << "- HOSPITAL MANAGER -\n";
-		std::cout << "---------------------------   Add   ---------------------------\n";
-		std::cout << "- (1) Add Patient                  (2) Add Doctor             -\n";
-		std::cout << "---------------------------   Set   ---------------------------\n";
-		std::cout << "- (3) Set Doctor Schedule          (4) Set Appointment        -\n";
-		std::cout << "---------------------------  Print  ---------------------------\n";
-		std::cout << "- (5) Print Patients               (6) Print Doctors          -\n";
-		std::cout << "- (7) Print Patient Appointments                              -\n";
-		std::cout << "--------------------------- Records ---------------------------\n";
-		std::cout << "- (8) Record Checkup                                          -\n";
-		std::cout << "--------------------------- Removes ---------------------------\n";
-		std::cout << "- (9) Remove Patient               (10) Remove Doctor         -\n";
-		std::cout << "---------------------------------------------------------------\n";
-		std::cout << "  (11) Exit  -\n";
-		std::cout << "--------------\n";
-		std::cout << log;
-		std::cout << "Input: ";
-		std::cin >> input;
-		std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
-		switch (input) {
-			case 1:
-				Window.mwPatientAdd();
-				system("clear");
-				break;
-			case 2:
-				Window.mwDoctorAdd();
-				system("clear");
-				break;
-			case 3:
-				Window.mwSetDoctorSchedule();
-				system("clear");
-				break;
-			case 4:
-				Window.mwSetAppointment();
-				system("clear");
-				break;
-			case 5:
-				Window.mwPatientsPrint();
-				break;
-			case 6:
-				Window.mwDoctorsPrint();
-				break;
-			case 7:
-				Window.mwPatientAppointmentsPrint();
-				break;
-			case 8:
-				Window.mwRecordCheckup();
-				system("clear");
-				break;
-			case 9:
-				Window.mwRemovePatient();
-				system("clear");
-				break;
-			case 10:
-				Window.mwRemoveDoctor();
-				system("clear");
-				break;
-			case 11:
-				system("clear");
-				cout << "Exiting...\n";
-				return 0;
-			default:
-				system("clear");
-				cout << "Couldn't Recognize command! Exiting...\n";
-				return 0;
-		}
+	int input;
+	std::cout << "\n";
+	std::cout << "--------------------\n";
+	std::cout << "- HOSPITAL MANAGER -\n";
+	std::cout << "---------------------------   Add   ---------------------------\n";
+	std::cout << "- (1) Add Patient                  (2) Add Doctor             -\n";
+	std::cout << "---------------------------   Set   ---------------------------\n";
+	std::cout << "- (3) Set Doctor Schedule          (4) Set Appointment        -\n";
+	std::cout << "---------------------------  Print  ---------------------------\n";
+	std::cout << "- (5) Print Patients               (6) Print Doctors          -\n";
+	std::cout << "- (7) Print Patient Appointments                              -\n";
+	std::cout << "--------------------------- Records ---------------------------\n";
+	std::cout << "- (8) Record Checkup                                          -\n";
+	std::cout << "--------------------------- Removes ---------------------------\n";
+	std::cout << "- (9) Remove Patient               (10) Remove Doctor         -\n";
+	std::cout << "---------------------------------------------------------------\n";
+	std::cout << "  (11) Exit  -\n";
+	std::cout << "--------------\n";
+	std::cout << log;
+	std::cout << "Input: ";
+	std::cin >> input;
+	std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
+	switch (input) {
+	    case 1:
+		Window.mwPatientAdd();
+		clear();
+		break;
+	    case 2:
+		Window.mwDoctorAdd();
+		clear();
+		break;
+	    case 3:
+		Window.mwSetDoctorSchedule();
+		clear();
+		break;
+	    case 4:
+		Window.mwSetAppointment();
+		clear();
+		break;
+	    case 5:
+		Window.mwPatientsPrint();
+		break;
+	    case 6:
+		Window.mwDoctorsPrint();
+		break;
+	    case 7:
+		Window.mwPatientAppointmentsPrint();
+		break;
+	    case 8:
+		Window.mwRecordCheckup();
+		clear();
+		break;
+	    case 9:
+		Window.mwRemovePatient();
+		clear();
+		break;
+	    case 10:
+		Window.mwRemoveDoctor();
+		clear();
+		break;
+	    case 11:
+		clear();
+		cout << "Exiting...\n";
+		return 0;
+	    default:
+		clear();
+		cout << "Couldn't Recognize command! Exiting...\n";
+		return 0;
+	}
     }
 }
