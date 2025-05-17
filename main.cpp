@@ -248,6 +248,19 @@ class MainWindow {
 	    }
 	    return;
 	}
+
+	void mwGetDocFromSpec(){
+	    std::string spec;
+	    cout << "Specialization: ";
+	    cin >> spec;
+
+	    Hospital.hospitalGetDoctorsFromSpecialization(spec);
+	    cout << "Press any key to continue...";
+	    cin.ignore();
+	    cin.ignore();
+	    clear();
+	    return;
+	}
 };
 
 int main() {
@@ -259,19 +272,21 @@ int main() {
 	std::cout << "\n";
 	std::cout << "--------------------\n";
 	std::cout << "- HOSPITAL MANAGER -\n";
-	std::cout << "---------------------------   Add   ---------------------------\n";
-	std::cout << "- (1) Add Patient                  (2) Add Doctor             -\n";
-	std::cout << "---------------------------   Set   ---------------------------\n";
-	std::cout << "- (3) Set Doctor Schedule          (4) Set Appointment        -\n";
-	std::cout << "---------------------------  Print  ---------------------------\n";
-	std::cout << "- (5) Print Patients               (6) Print Doctors          -\n";
-	std::cout << "- (7) Print Patient Appointments                              -\n";
-	std::cout << "--------------------------- Records ---------------------------\n";
-	std::cout << "- (8) Record Checkup                                          -\n";
-	std::cout << "--------------------------- Removes ---------------------------\n";
-	std::cout << "- (9) Remove Patient               (10) Remove Doctor         -\n";
-	std::cout << "---------------------------------------------------------------\n";
-	std::cout << "  (11) Exit  -\n";
+	std::cout << "-------------------------------------   Add   -------------------------------------\n";
+	std::cout << "- (1) Add Patient                             (2) Add Doctor                      -\n";
+	std::cout << "-------------------------------------   Set   -------------------------------------\n";
+	std::cout << "- (3) Set Doctor Schedule                     (4) Set Appointment                 -\n";
+	std::cout << "-------------------------------------  Print  -------------------------------------\n";
+	std::cout << "- (5) Print Patients                          (6) Print Doctors                   -\n";
+	std::cout << "- (7) Print Patient Appointments                                                  -\n";
+	std::cout << "------------------------------------- Records -------------------------------------\n";
+	std::cout << "- (8) Record Checkup                                                              -\n";
+	std::cout << "------------------------------------- Removes -------------------------------------\n";
+	std::cout << "- (9) Remove Patient                          (10) Remove Doctor                  -\n";
+	std::cout << "------------------------------------- Special -------------------------------------\n";
+	std::cout << "- (11) Get Doctor From Specializaiton                                             -\n";
+	std::cout << "-----------------------------------------------------------------------------------\n";
+	std::cout << "  (12) Exit  -\n";
 	std::cout << "--------------\n";
 	std::cout << log;
 	std::cout << "Input: ";
@@ -316,6 +331,9 @@ int main() {
 		clear();
 		break;
 	    case 11:
+		Window.mwGetDocFromSpec();
+		break;
+	    case 12:
 		clear();
 		cout << "Exiting...\n";
 		return 0;

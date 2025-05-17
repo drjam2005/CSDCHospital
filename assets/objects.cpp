@@ -20,6 +20,36 @@ std::string parseDate(int date){
     return full;
 }
 
+std::string toLower(const std::string str){
+    std::string lowered = "";
+    for(char chr : str){
+	if('A' <= chr && chr <= 'Z'){
+	    lowered += (chr + 32);
+	}else{
+	    lowered += chr;
+	}
+    }
+    return lowered;
+}
+
+int min(int a, int b){
+    if(a>b)
+	return b;
+    return a;
+}
+
+bool isValidComp(const std::string str1, const std::string str2){
+    if(str1.length() > str2.length()){
+	return false;
+    } 
+
+    for(int i = 0; i < str1.length(); ++i){
+	if(str1[i] != str2[i])
+	    return false;
+    }
+    return true;
+}
+
 // classes
 class Person{
     private:
@@ -137,7 +167,7 @@ class Checkup{
 class Patient : public Person {
     private:
 	//// IDK
-	// std::vector<std::string> symptoms;
+	std::string symptoms;
 	std::vector<Appointment> appointments;
     public:
 	Patient(int givenID, std::string givenName, int givenAge, char givenGender) : Person(givenID, givenName, givenAge, givenGender){}
@@ -154,6 +184,10 @@ class Patient : public Person {
 	    for(int i = 0; i < appointments.size(); ++i){
 		std::cout << '(' << i << "): " << appointments[i].getSched() << '\n';
 	    }
+	}
+	
+	void setSymptoms(std::string givenSymptoms){
+	    symptoms = givenSymptoms;
 	}
 };
 
@@ -431,6 +465,29 @@ class HospitalManager{
 	    if(!isLoad){
 		hospitalSaveCheckups();
 	    }
+	}
+
+	void hospitalGetDoctorsFromSpecialization(std::string specialization){
+	    bool exists = false;
+	    std::string loweredGiven = toLower(specialization);
+	    std::vector<Doctor> validDoctors;
+	    for(Doctor& doctor : doctors){
+		std::string doctorSpec = toLower(doctor.getSpecialization());
+		if(isValidComp(loweredGiven, doctorSpec)){
+		    validDoctors.push_back(doctor);
+		    exists = true;
+		}
+	    }
+	    
+	    if(!exists){
+		std::cout << "No Doctors with that specialization found!\n";
+		return;
+	    }
+
+	    for(Doctor& doc: validDoctors){
+		std::cout << "(" << doc.getID() << "): " << doc.getName() << " || " << doc.getSpecialization() << '\n';
+	    }
+	    return;
 	}
 
 	// Getters
