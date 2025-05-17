@@ -2,13 +2,12 @@
 #include <limits>
 #include <cstdlib>
 #include <objects.cpp>
+using namespace std;
 #ifdef _WIN32
     void clear() {system("cls");}
 #else
     void clear() {system("clear");}
 #endif
-//clear();
-using namespace std;
 
 class MainWindow {
     private:
@@ -40,6 +39,9 @@ class MainWindow {
 
 	void mwPatientsPrint(){
 	    Hospital.hospitalPrintPatients();
+	    cout << "Press any key to continue...\n";
+	    cin.ignore();
+	    clear();
 	}
 
 	void mwDoctorAdd(){
@@ -66,6 +68,9 @@ class MainWindow {
 
 	void mwDoctorsPrint(){
 	    Hospital.hospitalPrintDoctors();
+	    cout << "Press any key to continue...\n";
+	    cin.ignore();
+	    clear();
 	}
 
 	void mwSetDoctorSchedule(){
