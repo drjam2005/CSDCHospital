@@ -183,9 +183,12 @@ class MainWindow {
 		return;
 	    }
 
-	    clear();
 	    cout << "Patient " << patient->getName() << "'s Appointments: \n";
 	    patient->printAppointments();
+	    cout << "Press any key to continue...";
+	    cin.ignore();
+	    cin.ignore();
+	    clear();
 	    return;
 	}
 

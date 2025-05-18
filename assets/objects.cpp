@@ -182,7 +182,8 @@ class Patient : public Person {
 
 	void printAppointments(){
 	    for(int i = 0; i < appointments.size(); ++i){
-		std::cout << '(' << i << "): " << appointments[i].getSched() << '\n';
+		std::string appDate = appointments[i].getSched().substr(0,8);
+		std::cout << '(' << i << "): " << parseDate(std::stoi(appDate)) << ", " << appointments[i].getHour() << ":00" << '\n';
 	    }
 	}
 	
