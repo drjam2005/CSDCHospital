@@ -1,14 +1,13 @@
 # CSDCHospitalManagement
 
-## // TODO
 ### Key Features
 
-- [ ] Key Features:
-    - [ ] Patient Record Management: Add, edit, view, & remove patient records.
-    - [ ] Doctor Management: Add, edit, view, & remove doctor records.
-    - [ ] Appointment Setting: Assign a patient to a doctor at a particular schedule.
-    - [ ] Treatment Recording: Record symptoms of a patient and the treatment given by his doctor on a certain appointment.
-    - [ ] Data persistence: Store records in a file for future use. When the program runs, it must load all existing data from the file.
+- [X] Key Features:
+    - [X] Patient Record Management: Add, edit, view, & remove patient records.
+    - [X] Doctor Management: Add, edit, view, & remove doctor records.
+    - [X] Appointment Setting: Assign a patient to a doctor at a particular schedule.
+    - [X] Treatment Recording: Record symptoms of a patient and the treatment given by his doctor on a certain appointment.
+    - [X] Data persistence: Store records in a file for future use. When the program runs, it must load all existing data from the file.
 
 ##
 
@@ -23,45 +22,42 @@
     - [x] Getter and Setter Methods
 
 ### Patient (Inherits from Person)
-- [ ] Attributes
-    - [ ] Appointment and Symptoms
-    - [ ] Appointment and Treatments
-    - [ ] Doctor Assigned to Each Appointment
-- [ ] Methods
-    - [ ] Constructor
-    - [ ] Getter and Setter Methods
+- [X] Attributes
+    - [X] Appointment and Symptoms
+    - [X] Appointment and Treatments
+    - [X] Doctor Assigned to Each Appointment
+- [X] Methods
+    - [X] Constructor
+    - [X] Getter and Setter Methods
 
 ### Doctor (Inherits from Person)
-- [ ] Attributes
-    - [ ] Specalization
-    - [ ] Available Times
-- [ ] Methods
-    - [ ] Constructor
-    - [ ] Getter and Setter Methods
+- [X] Attributes
+    - [X] Specalization
+    - [X] Available Times
+- [X] Methods
+    - [X] Constructor
+    - [X] Getter and Setter Methods
 
 ### Appointment
-- [ ] Attributes
-    - [ ] Appointment ID Number
-    - [ ] Patient ID
-    - [ ] Doctor ID
-    - [ ] Date and Time
-- [ ] Method
-    - [ ] Scheduling of Appointment
-    - [ ] Cancelling of Appointment
-    - [ ] View Appointment
+- [X] Attributes
+    - [X] Appointment ID Number
+    - [X] Patient ID
+    - [X] Doctor ID
+    - [X] Date and Time
+- [X] Method
+    - [X] Scheduling of Appointment
+    - [X] Cancelling of Appointment
+    - [X] View Appointment
 
 ### HospitalManager
-- [ ] Attributes
-    - [ ] Vector/Array of Patients
-    - [ ] Vector/Array of Doctors
-    - [ ] Strings for fileName saves
-- [ ] Methods
-    - [ ] Constructor to get existing patient and doctor records from file/s
-    - [ ] Method to save data into files.
-    - [ ] Methods to add, remove, search, and update a patient records
-    - [ ] Methods to add, remove, search, and update a doctor records
-    - [ ] Method/s to manage appointments
+- [X] Attributes
+    - [X] Vector/Array of Patients
+    - [X] Vector/Array of Doctors
+    - [X] Strings for fileName saves
+- [X] Methods
+    - [X] Constructor to get existing patient and doctor records from file/s
+    - [X] Method to save data into files.
+    - [X] Methods to add, remove, search, and update a patient records
+    - [X] Methods to add, remove, search, and update a doctor records
+    - [X] Method/s to manage appointments
 
-## Other Class/es
-### MainWindow
-- [ ] // TODO
