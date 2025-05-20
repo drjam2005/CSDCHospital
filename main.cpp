@@ -84,7 +84,6 @@ class MainWindow {
 
 		if(chosenDoctor == nullptr || chosenDoctor->getName() == "_null"){
 		    cout << "Doctor with ID: " + to_string(id) + " doesn't exist!\n";
-			return;
 		}else{
 		    break;
 		}
