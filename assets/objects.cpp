@@ -44,8 +44,8 @@ bool isValidComp(const std::string str1, const std::string str2){
     } 
 
     for(int i = 0; i < str1.length(); ++i){
-	if(str1[i] != str2[i])
-	    return false;
+		if(str1[i] != str2[i])
+			return false;
     }
     return true;
 }
@@ -634,17 +634,17 @@ class HospitalManager{
 	    // Removing Appointments and Checkups with patID
 
 	    for(Appointment& app : appointments){
-		if(app.getPatID() == patID){
-		    // cancelling appointments
-		    app.appointmentCancel();
-		    // removing checkups
-		    for(Checkup& checkup : checkups){
-			if(checkup.getAppID() == app.getID()){
-			    checkup.removeCheckup();
-			    break;
+			if(app.getPatID() == patID){
+				// cancelling appointments
+				app.appointmentCancel();
+				// removing checkups
+				for(Checkup& checkup : checkups){
+				if(checkup.getAppID() == app.getID()){
+					checkup.removeCheckup();
+					break;
+				}
+				}
 			}
-		    }
-		}
 	    }
 
 	    hospitalSavePatients();

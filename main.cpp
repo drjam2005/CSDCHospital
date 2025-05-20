@@ -1,7 +1,7 @@
 #include <iostream>
 #include <limits>
 #include <cstdlib>
-#include <objects.cpp>
+#include "assets/objects.cpp"
 using namespace std;
 #ifdef _WIN32
     void clear() {system("cls");}
@@ -84,6 +84,7 @@ class MainWindow {
 
 		if(chosenDoctor == nullptr || chosenDoctor->getName() == "_null"){
 		    cout << "Doctor with ID: " + to_string(id) + " doesn't exist!\n";
+			return;
 		}else{
 		    break;
 		}
@@ -102,9 +103,9 @@ class MainWindow {
 
 	    // parsing date
 	    if(stoi(dd) < 10)
-		dd = "0" + dd;
+		dd = "0" + std::to_string(stoi(dd));
 	    if(stoi(mm) < 10)
-		mm = "0" + mm;
+		mm = "0" + std::to_string(stoi(mm));
 
 	    cout << "\n\tFormat (hourStart hourEnd)\n\t       (ex: 10 15 ) [10am -> 3pm]\n\tHours: ";
 	    cin >> hs >> he;
