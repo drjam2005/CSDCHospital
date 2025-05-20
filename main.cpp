@@ -107,8 +107,7 @@ class MainWindow {
 	    if(stoi(mm) < 10)
 		mm = "0" + std::to_string(stoi(mm));
 
-	    cout << "\n\tFormat (hourStart hourEnd)\n\t       (ex: 10 15 ) [10am -> 3pm]\n\tHours: ";
-	    cin >> hs >> he;
+	    cout << "\n\tFormat (hourStart hourEnd)\n\t       (ex: 10 15 ) [10am -> 3pm]\n\tHours: "; cin >> hs >> he;
 	    string fulldate = yyyy + mm + dd + ':' + to_string(hs) + ',' + to_string(he);
 	    *logOut = "Added schedule to "+ chosenDoctor->getName() + "\n";
 	    Hospital.hospitalSetDoctorSchedule(id, fulldate);
