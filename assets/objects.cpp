@@ -344,7 +344,7 @@ class HospitalManager{
 
 		ss >> id >> cma;
 		std::getline(ss, name, (char)0x1F);
-		ss >> cma >> age >> cma >> sex;
+		ss >> age >> cma >> sex;
 		hospitalPatientAdd(name, age, sex, true);
 	    }
 	    return;
