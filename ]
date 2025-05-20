@@ -276,7 +276,7 @@ class HospitalManager{
 		patFile << patient.getID() << (char)0x1F
 		    << patient.getName() << (char)0x1F
 		    << patient.getAge() << (char)0x1F
-		    << patient.getSex() << '\n';
+		    << patient.getSex() << (char)0x1F << '\n';
 	    }
 	    patFile.close();
 	    return;
@@ -289,7 +289,7 @@ class HospitalManager{
 		    << doctor.getName() << (char)0x1F
 		    << doctor.getAge() << (char)0x1F
 		    << doctor.getSex() << (char)0x1F
-		    << doctor.getSpecialization() << '\n';
+		    << doctor.getSpecialization() << (char)0x1F << '\n';
 	    }
 	    docFile.close();
 	    return;
@@ -664,15 +664,17 @@ class HospitalManager{
 		    break;
 		case 2:
 		    cout << "Input the new Age: ";
-		    while (!(cin >> newAge) || newAge < 0) {
+		    while (!(cin >> newAge)) {
 			cout << "Please enter a valid age!";
 			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			doctor->setAge(newAge);
 			break;
 		    }
-		    doctor->setAge(newAge);
 		    break;
 		case 3:
 		    cout << "Input the new specialization: ";
+		    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 		    getline(cin, newSpecialization);
 		    doctor->setSpecialization(newSpecialization);
 		    break;
@@ -685,19 +687,21 @@ class HospitalManager{
 	void hospitalEditPatient(int patID){
 	    Patient* patient = hospitalGetPatient(patID);
 	    if(patient == nullptr){
-		    std::cout << "\nPatient with this ID doesn't exist!\n";
+		    std::cout << "\nDoctor with this ID doesn't exist!\n";
 		    return;
 	    }
 	    
 	    string newName, newSpecialization;
 	    int newAge;
 
-	    std::cout << "Name: " << " " << patient->getName() << std::endl;
-	    std::cout << "Age: " << " " << patient->getAge() << std::endl;
+	    std::cout << "Name: " << " " << doctor->getName() << std::endl;
+	    std::cout << "Age: " << " " << doctor->getAge() << std::endl;
+	    std::cout << "Specialization: " << " " << doctor->getSpecialization() << std::endl;
 
 	    std::cout << "Choose what to edit: " << std::endl;
 	    std::cout << "1. Name" << std::endl;
 	    std::cout << "2. Age" << std::endl;
+	    std::cout << "3. Specialization" << std::endl;
 	    std::cout << "Input: ";
 	    int choice;
 	    std::cin >> choice;
@@ -706,20 +710,26 @@ class HospitalManager{
 	    case 1:
 		std::cout <<"Input the new name: "; 
 		std::getline(std::cin, newName);
-		patient->setName(newName);
+		doctor->setName(newName);
 		break;
 	    case 2:
 		cout << "Input the new Age: ";
-		while (!(cin >> newAge)|| newAge < 0) {
+		while (!(cin >> newAge)) {
 		    cout << "Please enter a valid age!";
 		    cin.clear();
+		    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		    doctor->setAge(newAge);
 		    break;
 		}
-		patient->setAge(newAge);
+		break;
+	    case 3:
+		cout << "Input the new specialization: ";
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		getline(cin, newSpecialization);
+		doctor->setSpecialization(newSpecialization);
 		break;
 	    }
 
-	    hospitalSavePatients();
 	}
 
 

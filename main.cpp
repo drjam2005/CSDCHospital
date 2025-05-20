@@ -266,12 +266,22 @@ class MainWindow {
 	    return;
 	}
 
-	void testEdit(){
-		int docID;
+	void mwDoctorEdit(){
+	    int docID;
 	    cout << "Doctor ID: ";
 	    cin >> docID;
 		
-		Hospital.hospitalEditDoctor(docID);
+	    Hospital.hospitalEditDoctor(docID);
+	}
+
+
+
+	void mwPatientEdit(){
+	    int docID;
+	    cout << "Patient ID: ";
+	    cin >> docID;
+		
+	    Hospital.hospitalEditPatient(docID);
 	}
 };
 
@@ -297,8 +307,10 @@ int main() {
 	std::cout << "- (9) Remove Patient                          (10) Remove Doctor                  -\n";
 	std::cout << "------------------------------------- Special -------------------------------------\n";
 	std::cout << "- (11) Get Doctor From Specializaiton                                             -\n";
+	std::cout << "-------------------------------------  Edits  -------------------------------------\n";
+	std::cout << "- (12) Edit Doctor                            (13) Edit Patient                   -\n";
 	std::cout << "-----------------------------------------------------------------------------------\n";
-	std::cout << "  (12) Exit  -\n";
+	std::cout << "  (14) Exit  -\n";
 	std::cout << "--------------\n";
 	std::cout << log;
 	std::cout << "Input: ";
@@ -346,11 +358,14 @@ int main() {
 		Window.mwGetDocFromSpec();
 		break;
 	    case 12:
-		clear();
-		cout << "Exiting...\n";
+		Window.mwDoctorEdit();
 		break;
-		case 13:
-		Window.testEdit();
+	    case 13:
+		Window.mwPatientEdit();
+		break;
+	    case 14:
+		clear();
+		cout << "Exitting program...\n";
 		return 0;
 	    default:
 		clear();
