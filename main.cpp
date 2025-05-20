@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include "assets/objects.cpp"
 using namespace std;
+
 #ifdef _WIN32
     void clear() {system("cls");}
 #else
@@ -264,6 +265,14 @@ class MainWindow {
 	    clear();
 	    return;
 	}
+
+	void testEdit(){
+		int docID;
+	    cout << "Doctor ID: ";
+	    cin >> docID;
+		
+		Hospital.hospitalEditDoctor(docID);
+	}
 };
 
 int main() {
@@ -339,6 +348,9 @@ int main() {
 	    case 12:
 		clear();
 		cout << "Exiting...\n";
+		break;
+		case 13:
+		Window.testEdit();
 		return 0;
 	    default:
 		clear();

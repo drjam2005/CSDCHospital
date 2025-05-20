@@ -4,6 +4,10 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <limits>
+#include <cstdlib>
+
+using namespace std;
 
 // consts
 const std::string months[12] = {"January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
@@ -83,6 +87,14 @@ class Person{
 
 	void setID(int id){
 	    ID = id;
+	}
+
+	void setName(const std::string& givenName){
+		name = givenName;
+	}
+
+	void setAge(int givenAge){
+		age = givenAge;
 	}
 };
 
@@ -218,6 +230,8 @@ class Doctor : public Person {
 	std::vector<std::string> getSchedules(){
 	    return availableTimes;
 	}
+	
+	
 };
 
 //functions
@@ -619,6 +633,68 @@ class HospitalManager{
 	    }
 	    return true;
 	}
+	
+	void hospitalEditDoctor(int docID){
+		Doctor* doctor = hospitalGetDoctor(docID);
+		if(doctor == nullptr){
+			std::cout << "\nDoctor with this ID doesn't exist!\n";
+			return;
+		}
+		
+		string newName, newSpecialization;
+		int newAge;
+
+		std::cout << "Name: " << " " << doctor->getName() << std::endl;
+		std::cout << "Age: " << " " << doctor->getAge() << std::endl;
+		std::cout << "Specialization: " << " " << doctor->getSpecialization() << std::endl;
+
+		std::cout << "Choose what to edit: " << std::endl;
+		std::cout << "1. Name" << std::endl;
+		std::cout << "2. Age" << std::endl;
+		std::cout << "3. Specialization" << std::endl;
+		std::cout << "Input: ";
+		int choice;
+		std::cin >> choice;
+		switch(choice){
+		case 1:
+			std::cin.ignore();
+			std::cout <<"Input the new name: "; 
+			std::getline(std::cin, newName);
+			doctor->setName(newName);
+			break;
+		case 2:
+			cout << "Input the new Age: ";
+			while (!(cin >> newAge)) {
+			cout << "Please enter a valid age!";
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			break;
+	    }
+		doctor->setAge(newAge);
+		break;
+		case 3:
+		cout << "Input the new specialization: ";
+	    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+	    getline(cin, newSpecialization);
+		doctor->setSpecialization(newSpecialization);
+		break;
+		}
+
+		hospitalSaveDoctors();
+
+	}
+
+	void hospitalEditPatient(int patID){
+		Patient* patient = hospitalGetPatient(patID);
+		if(patient == nullptr){
+			std::cout << "\nPatient with this ID doesn't exist!\n";
+			return;
+		}
+
+		std::cout << "\nChoose what to edit:";
+		std::cout ;
+
+	}
 
 
 	// Removing...
@@ -685,8 +761,10 @@ class HospitalManager{
 			}
 		    }
 		}
+		
 	    }
 
+	
 	    hospitalSaveDoctors();
 	    hospitalSaveCheckups();
 	    hospitalSaveAppointments();
