@@ -9,7 +9,7 @@ using namespace std;
 #else
     void clear() {system("clear");}
 #endif
-
+// bro
 class MainWindow {
     private:
 	HospitalManager Hospital;
